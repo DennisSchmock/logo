@@ -7,6 +7,9 @@ package myresprog;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.HashMap;
+import net.objecthunter.exp4j.Expression;
+import net.objecthunter.exp4j.ExpressionBuilder;
 
 /**
  *
@@ -23,6 +26,7 @@ public class Interpreter {
     private MainPanel mainPanel;
     private double angle;
     private boolean repeat;
+    private HashMap vars = new HashMap();
     private int countRepeat;
     private int repeats;
     private int startRepeat;
@@ -50,13 +54,15 @@ public class Interpreter {
         String tempString = command[0].toLowerCase();
         switch (tempString) {
             case "fd":
-                currentPoint = FindPoint.findNewPoint(oldPoint, Double.parseDouble(command[1]), angle);
-                mainPanel.drawLine(oldPoint, currentPoint);
+                if (isNumeric(command[1])){
+                currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]), angle);
+                }
+                mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()),FindPoint.getInt(currentPoint.getY())));
                 oldPoint = currentPoint;
                 break;
             case "bk":
-                currentPoint = FindPoint.findNewPoint(oldPoint, Double.parseDouble(command[1]) * -1, angle);
-                mainPanel.drawLine(oldPoint, currentPoint);
+                currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]) * -1, angle);
+                mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()),FindPoint.getInt(currentPoint.getY())));
                 oldPoint = currentPoint;
                 break;
             case "rt":
@@ -65,6 +71,15 @@ public class Interpreter {
             case "lt":
                 angle = angle + Double.parseDouble(command[1]);
                 break;
+            case "let":
+                String expString="";
+                for (int i = 2; i < command.length; i++) {
+                    expString+=command[i];
+                }
+                Expression e = new ExpressionBuilder(expString).build();
+                vars.putIfAbsent(command[1], e.evaluate());
+                System.out.println("Expression added: "+command[1]+" with the value "+ e.evaluate());
+                break;    
             case "repeat":
                 repeatCommands(command);
                 break;
@@ -75,6 +90,18 @@ public class Interpreter {
         }
 
     }
+    public static boolean isNumeric(String str)  
+{  
+  try  
+  {  
+    double d = Double.parseDouble(str);  
+  }  
+  catch(NumberFormatException nfe)  
+  {  
+    return false;  
+  }  
+  return true;  
+}
 
     private void repeatCommands(String[] command) {
         // mainPanel.timer.stop();
