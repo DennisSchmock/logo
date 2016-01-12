@@ -86,16 +86,14 @@ public class Interpreter {
             countRepeat++;
 
         }
-       
-        
+
         if (isNumeric(command[1])) {
             startRepeat = programCounter;
             repeats = Integer.parseInt(command[1]);
-            countRepeat =0;
+            countRepeat = 0;
 
         }
 
-      
     }
 
     /**
