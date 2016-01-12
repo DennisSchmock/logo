@@ -5,6 +5,7 @@
  */
 package myresprog;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
@@ -18,7 +19,8 @@ import javax.swing.Timer;
 public class MainPanel extends javax.swing.JFrame {
 
     private Interpreter intp;
-    private Timer timer;
+    public Timer timer;
+    private Color color;
 
     /**
      * Creates new form MainPanel
@@ -26,15 +28,17 @@ public class MainPanel extends javax.swing.JFrame {
     public MainPanel() {
         intp = new Interpreter(this);
         initComponents();
+        color = Color.BLACK;
     }
 
     public void drawLine(Point a, Point b) {
         Graphics2D g2d = (Graphics2D) jPanel1.getGraphics();
+        g2d.setColor(getColor());
         System.out.println("X " + a.returnIntX() + " Y " + a.returnIntY() );
         System.out.println("X " + b.returnIntX() + " Y " + b.returnIntY() );
         g2d.drawLine(a.returnIntX(), a.returnIntY(), b.returnIntX(), b.returnIntY());
        // g2d.drawLine(10, 10, 50, 50);
-        
+        g2d.setColor(getColor());
     }
 
     public void theTimer() {
@@ -50,7 +54,7 @@ public class MainPanel extends javax.swing.JFrame {
 //                }
         };
         
-        timer = new Timer(100, actListner);
+        timer = new Timer(1, actListner);
         timer.start();
     }
 
@@ -179,6 +183,20 @@ public class MainPanel extends javax.swing.JFrame {
         g2d.drawLine(20, 40, 250, 40);
 
         g2d.dispose();
+    }
+
+    /**
+     * @return the color
+     */
+    public Color getColor() {
+        return color;
+    }
+
+    /**
+     * @param color the color to set
+     */
+    public void setColor(Color color) {
+        this.color = color;
     }
 
 

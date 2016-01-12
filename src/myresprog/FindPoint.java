@@ -18,7 +18,7 @@ import java.awt.geom.Point2D;
  */
 public class FindPoint {
     
-    public static Point findNewPoint(Point old, int dist, double angle){
+    public static Point findNewPoint(Point old, double dist, double angle){
         double x = old.getX()+Math.cos((angle-90)* Math.PI / 180) * dist;
         double y = old.getY()+Math.sin((angle-90)* Math.PI / 180) * dist;
         System.out.println("New Point x:"+x+" y:"+y);

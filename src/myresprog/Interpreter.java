@@ -5,6 +5,7 @@
  */
 package myresprog;
 
+import java.awt.Color;
 import java.util.ArrayList;
 
 /**
@@ -27,7 +28,7 @@ public class Interpreter {
         mainPanel = panel;
         lr = new LineReader("Commands.txt");
         commands = lr.textFileToStringArrayList();
-        angle = 10;
+        angle = 0;
         oldPoint = new Point(400, 300);
 
         //   oldPoint = currentPoint;
@@ -45,12 +46,12 @@ public class Interpreter {
         String tempString = command[0].toLowerCase();
         switch (tempString) {
             case "fd":
-                currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]), angle);
+                currentPoint = FindPoint.findNewPoint(oldPoint, Double.parseDouble(command[1]), angle);
                 mainPanel.drawLine(oldPoint, currentPoint);
                 oldPoint = currentPoint;
                 break;
             case "bk":
-                currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]) * -1, angle);
+                currentPoint = FindPoint.findNewPoint(oldPoint, Double.parseDouble(command[1]) * -1, angle);
                 mainPanel.drawLine(oldPoint, currentPoint);
                 oldPoint = currentPoint;
                 break;
@@ -63,13 +64,16 @@ public class Interpreter {
             case "repeat":
                 repeatCommands(command[1]);
                 break;
+            case "color":
+                changeColor(command);
+                break;
 
         }
 
     }
 
     private void repeatCommands(String s) {
-        
+        mainPanel.timer.stop();
         int start = programCounter;
         int end = 0;
         int repeats = Integer.parseInt(s);
@@ -85,14 +89,14 @@ public class Interpreter {
 
         }
         for (int i = 0; i < repeats; i++) {
-            for (int j = start+1; j < end; j++) {
+            for (int j = start + 1; j < end; j++) {
                 interpretCommand(commands.get(j));
             }
-            
-            
+
         }
-        
+
         programCounter = end;
+        mainPanel.timer.start();
     }
 
     /**
@@ -151,4 +155,33 @@ public class Interpreter {
         programCounter = aProgramCounter;
     }
 
+    private void changeColor(String[] s) {
+        String temp = "";
+        if (s.length>1) {
+            temp = s[1];
+        }
+        // s.toLowerCase();
+        switch (temp) {
+            case "red":
+                mainPanel.setColor(Color.RED);
+                break;
+            case "yellow":
+                mainPanel.setColor(Color.YELLOW);
+                break;
+            case "green":
+                mainPanel.setColor(Color.GREEN);
+                break;
+            case "blue":
+                mainPanel.setColor(Color.BLUE);
+                break;
+            case "black":
+                mainPanel.setColor(Color.BLACK);
+                break;
+            default:
+                mainPanel.setColor(Color.BLACK);
+                break;
+        }
+    }
 }
+
+
