@@ -23,6 +23,10 @@ public class Interpreter {
     private MainPanel mainPanel;
     private double angle;
     private boolean repeat;
+    private int countRepeat;
+    private int repeats;
+    private int startRepeat;
+    private int endRepeat;
 
     public Interpreter(MainPanel panel) {
         mainPanel = panel;
@@ -62,7 +66,7 @@ public class Interpreter {
                 angle = angle + Double.parseDouble(command[1]);
                 break;
             case "repeat":
-                repeatCommands(command[1]);
+                repeatCommands(command);
                 break;
             case "color":
                 changeColor(command);
@@ -72,31 +76,26 @@ public class Interpreter {
 
     }
 
-    private void repeatCommands(String s) {
-        mainPanel.timer.stop();
-        int start = programCounter;
-        int end = 0;
-        int repeats = Integer.parseInt(s);
-        for (int i = start; i < commands.size(); i++) {
-            String[] command = commands.get(i);
-            if (command.length > 1) {
-                if (command[0].equalsIgnoreCase("repeat") && command[1].equalsIgnoreCase("end")) {
-                    end = i;
-                    System.out.println("Last is: " + end);
-                    break;
-                }
-            }
+    private void repeatCommands(String[] command) {
+        // mainPanel.timer.stop();
+        if (command.length <= 1) {
+            return;
+        }
+        if (command[1].equalsIgnoreCase("end") && countRepeat < repeats) {
+            programCounter = startRepeat;
+            countRepeat++;
 
         }
-        for (int i = 0; i < repeats; i++) {
-            for (int j = start + 1; j < end; j++) {
-                interpretCommand(commands.get(j));
-            }
+       
+        
+        if (isNumeric(command[1])) {
+            startRepeat = programCounter;
+            repeats = Integer.parseInt(command[1]);
+            countRepeat =0;
 
         }
 
-        programCounter = end;
-        mainPanel.timer.start();
+      
     }
 
     /**
@@ -157,7 +156,7 @@ public class Interpreter {
 
     private void changeColor(String[] s) {
         String temp = "";
-        if (s.length>1) {
+        if (s.length > 1) {
             temp = s[1];
         }
         // s.toLowerCase();
@@ -182,6 +181,13 @@ public class Interpreter {
                 break;
         }
     }
+
+    public static boolean isNumeric(String str) {
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
 }
-
-
