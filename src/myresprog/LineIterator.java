@@ -46,7 +46,7 @@ public class LineIterator implements Iterator<String> {
         if (stringToReturn == null) {
             try {
                 br.close();
-                System.out.println("* File is over *");
+                System.out.println("* End of file *");
             } catch (IOException ex) {
             }
         }

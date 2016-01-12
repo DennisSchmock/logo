@@ -7,19 +7,51 @@ package myresprog;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import javax.swing.Timer;
 
 /**
  *
  * @author dennisschmock
  */
 public class MainPanel extends javax.swing.JFrame {
-    
+
+    private Interpreter intp;
+    private Timer timer;
 
     /**
      * Creates new form MainPanel
      */
     public MainPanel() {
+        intp = new Interpreter(this);
         initComponents();
+    }
+
+    public void drawLine(Point a, Point b) {
+        Graphics2D g2d = (Graphics2D) jPanel1.getGraphics();
+        System.out.println("X " + a.returnIntX() + " Y " + a.returnIntY() );
+        System.out.println("X " + b.returnIntX() + " Y " + b.returnIntY() );
+        g2d.drawLine(a.returnIntX(), a.returnIntY(), b.returnIntX(), b.returnIntY());
+       // g2d.drawLine(10, 10, 50, 50);
+        
+    }
+
+    public void theTimer() {
+
+        ActionListener actListner = (ActionEvent event) -> {
+            intp.performNextAction();
+            if(intp.getProgramCounter()>=intp.getCommands().size()){
+                timer.stop();
+            }
+//                if(intp.getCurrentPoint()!=intp.getOldPoint()){
+//                    drawLine(intp.getOldPoint(),intp.getCurrentPoint());
+//                    intp.setOldPoint(intp.getCurrentPoint());
+//                }
+        };
+        
+        timer = new Timer(100, actListner);
+        timer.start();
     }
 
     /**
@@ -31,21 +63,79 @@ public class MainPanel extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        jPanel1 = new javax.swing.JPanel();
+        jButton1 = new javax.swing.JButton();
+
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setTitle("Logo");
+        setAlwaysOnTop(true);
+        setBackground(new java.awt.Color(255, 255, 255));
+        setBounds(new java.awt.Rectangle(0, 0, 800, 600));
+        setMaximumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(800, 600));
+        setResizable(false);
+        setSize(new java.awt.Dimension(800, 600));
+
+        jPanel1.setBackground(new java.awt.Color(255, 255, 255));
+        jPanel1.setMaximumSize(new java.awt.Dimension(800, 600));
+        jPanel1.setMinimumSize(new java.awt.Dimension(800, 600));
+        jPanel1.setPreferredSize(new java.awt.Dimension(800, 600));
+        jPanel1.addPropertyChangeListener(new java.beans.PropertyChangeListener() {
+            public void propertyChange(java.beans.PropertyChangeEvent evt) {
+                jPanel1PropertyChange(evt);
+            }
+        });
+
+        jButton1.setText("jButton1");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(600, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(109, 109, 109))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(544, Short.MAX_VALUE)
+                .addComponent(jButton1)
+                .addGap(41, 41, 41))
+        );
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 400, Short.MAX_VALUE)
+            .addGap(0, 806, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 806, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGap(0, 300, Short.MAX_VALUE)
+            .addGap(0, 614, Short.MAX_VALUE)
+            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                .addComponent(jPanel1, javax.swing.GroupLayout.DEFAULT_SIZE, 614, Short.MAX_VALUE))
         );
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void jPanel1PropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_jPanel1PropertyChange
+        // TODO add your handling code here:
+    }//GEN-LAST:event_jPanel1PropertyChange
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        // TODO add your handling code here:
+        theTimer();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -81,24 +171,19 @@ public class MainPanel extends javax.swing.JFrame {
             }
         });
     }
-    
+
     private void doDrawing(Graphics g) {
 
         Graphics2D g2d = (Graphics2D) g.create();
 
-       
-
         g2d.drawLine(20, 40, 250, 40);
 
-
-    
-        
         g2d.dispose();
     }
 
-   
-
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton jButton1;
+    private javax.swing.JPanel jPanel1;
     // End of variables declaration//GEN-END:variables
 }

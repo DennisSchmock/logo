@@ -17,6 +17,14 @@ public class OurPoint {
         this.x = x;
         this.y = y;
     }
+    
+    public int returnIntX(){
+        return (int) this.x;
+    }
+    
+    public int returnIntY(){
+        return (int) this.y;
+    }
 
     /**
      * @return the x

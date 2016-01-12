@@ -18,7 +18,7 @@ import java.util.logging.Logger;
  * @author Daniel
  */
 public class LineReader implements Iterable<String>{
-    String filename;
+    private String filename;
     LineReader(String filename){
         this.filename=filename;        
     }
@@ -34,9 +34,9 @@ public class LineReader implements Iterable<String>{
         return null;
         }
     
-    public static ArrayList<String[]> textFileToStringArrayList() {
+    public ArrayList<String[]> textFileToStringArrayList() {
         ArrayList<String[]> textArray = new ArrayList();
-        for (String s : new LineReader("list.txt")) {
+        for (String s : new LineReader(filename)) {
             textArray.add(s.split(" ",0));
             System.out.println("Added: "+s+ " to arraylist!");
             for (int i = 0; i < textArray.get(0).length; i++) {

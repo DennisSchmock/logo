@@ -1,0 +1,3 @@
+repeat 360
+fd 10
+repeat end
