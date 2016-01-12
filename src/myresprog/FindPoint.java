@@ -22,6 +22,14 @@ public class FindPoint {
         double x = old.getX()+Math.cos((angle-90)* Math.PI / 180) * dist;
         double y = old.getY()+Math.sin((angle-90)* Math.PI / 180) * dist;
         System.out.println("New Point x:"+x+" y:"+y);
+        
         return new Point (x,y);
     }
+    
+    public static int getInt(double coord){
+        if (coord>0 && coord-(int)coord>0.5) return (int) (Math.ceil(coord)+0.1);
+        if (coord<0 && (int)coord-coord>0.5) return (int) (Math.floor(coord)-0.1);
+        else return (int) coord;
+    }
+    
 }
