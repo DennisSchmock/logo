@@ -31,6 +31,7 @@ public class Interpreter {
     private int repeats;
     private int startRepeat;
     private int endRepeat;
+    private ArrayList<Loop> loops;
 
     public Interpreter(MainPanel panel) {
         mainPanel = panel;
@@ -38,6 +39,7 @@ public class Interpreter {
         commands = lr.textFileToStringArrayList();
         angle = 0;
         oldPoint = new Point(400, 300);
+        loops = new ArrayList<>();
 
         //   oldPoint = currentPoint;
     }
@@ -54,15 +56,15 @@ public class Interpreter {
         String tempString = command[0].toLowerCase();
         switch (tempString) {
             case "fd":
-                if (isNumeric(command[1])){
-                currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]), angle);
+                if (isNumeric(command[1])) {
+                    currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]), angle);
                 }
-                mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()),FindPoint.getInt(currentPoint.getY())));
+                mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
                 oldPoint = currentPoint;
                 break;
             case "bk":
                 currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]) * -1, angle);
-                mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()),FindPoint.getInt(currentPoint.getY())));
+                mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
                 oldPoint = currentPoint;
                 break;
             case "rt":
@@ -72,14 +74,14 @@ public class Interpreter {
                 angle = angle + Double.parseDouble(command[1]);
                 break;
             case "let":
-                String expString="";
+                String expString = "";
                 for (int i = 2; i < command.length; i++) {
-                    expString+=command[i];
+                    expString += command[i];
                 }
                 Expression e = new ExpressionBuilder(expString).build();
                 vars.putIfAbsent(command[1], e.evaluate());
-                System.out.println("Expression added: "+command[1]+" with the value "+ e.evaluate());
-                break;    
+                System.out.println("Expression added: " + command[1] + " with the value " + e.evaluate());
+                break;
             case "repeat":
                 repeatCommands(command);
                 break;
@@ -90,19 +92,17 @@ public class Interpreter {
         }
 
     }
-    public static boolean isNumeric(String str)  
-{  
-  try  
-  {  
-    double d = Double.parseDouble(str);  
-  }  
-  catch(NumberFormatException nfe)  
-  {  
-    return false;  
-  }  
-  return true;  
-}
 
+    public static boolean isNumeric(String str) {
+        try {
+            double d = Double.parseDouble(str);
+        } catch (NumberFormatException nfe) {
+            return false;
+        }
+        return true;
+    }
+
+    
     private void repeatCommands(String[] command) {
         // mainPanel.timer.stop();
         if (command.length <= 1) {
@@ -207,12 +207,12 @@ public class Interpreter {
         }
     }
 
-    public static boolean isNumeric(String str) {
-        try {
-            double d = Double.parseDouble(str);
-        } catch (NumberFormatException nfe) {
-            return false;
-        }
-        return true;
-    }
+//    public static boolean isNumeric(String str) {
+//        try {
+//            double d = Double.parseDouble(str);
+//        } catch (NumberFormatException nfe) {
+//            return false;
+//        }
+//        return true;
+//    }
 }

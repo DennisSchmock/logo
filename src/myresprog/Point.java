@@ -17,8 +17,8 @@ public class Point implements Comparable<Point> {
     Point(double x, double y){
         this.x=x;
         this.y=y;
-        System.out.println("x: " + this.x);
-        System.out.println("y: " + this.y);
+        System.out.println("New point x: " + this.x);
+        System.out.println("New point y: " + this.y);
     }
     
     
