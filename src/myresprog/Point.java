@@ -30,12 +30,22 @@ public class Point implements Comparable<Point> {
         return -1;
     }
     
+     public static int getInt(double coord){
+        if (coord>0 && coord-(int)coord>0.5) return (int) (Math.ceil(coord)+0.1);
+        if (coord<0 && (int)coord-coord>0.5) return (int) (Math.floor(coord)-0.1);
+        else return (int) coord;
+    }
+    
     public int returnIntX(){
-        return (int) this.x;
+        if (x>0 && x-(int)x>0.5) return (int) (Math.ceil(x)+0.1);
+        if (x<0 && (int)x-x>0.5) return (int) (Math.floor(x)-0.1);
+        else return (int) x;
     }
     
     public int returnIntY(){
-        return (int) this.y;
+        if (y>0 && y-(int)y>0.5) return (int) (Math.ceil(y)+0.1);
+        if (y<0 && (int)y-y>0.5) return (int) (Math.floor(y)-0.1);
+        else return (int) y;
     }
 
     /**

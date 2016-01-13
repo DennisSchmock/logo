@@ -88,6 +88,9 @@ public class Interpreter {
             case "color":
                 changeColor(command);
                 break;
+            case "move":
+                movePointer(command);
+                break;
 
         }
 
@@ -102,19 +105,31 @@ public class Interpreter {
         return true;
     }
 
-    
     private void repeatCommands(String[] command) {
         // mainPanel.timer.stop();
         if (command.length <= 1) {
             return;
         }
-        if (command[1].equalsIgnoreCase("end") && countRepeat < repeats) {
-            programCounter = startRepeat;
-            countRepeat++;
+        if (command[1].equalsIgnoreCase("end")) {
+            if (!loops.isEmpty()) {
+                Loop intLoop = loops.get(loops.size() - 1);
+
+                if (intLoop.getIterations() <= 0) {
+                    loops.remove(intLoop);
+                    System.out.println("Ended loop");
+                    return;
+                }
+                programCounter = intLoop.getStartIndex();
+                intLoop.setIterations(intLoop.getIterations() - 1);
+
+            }
+//            programCounter = startRepeat;
+//            countRepeat++;
 
         }
 
         if (isNumeric(command[1])) {
+            loops.add(new Loop("Loop" + programCounter, programCounter, 0, Integer.parseInt(command[1])-1));
             startRepeat = programCounter;
             repeats = Integer.parseInt(command[1]);
             countRepeat = 0;
@@ -207,12 +222,8 @@ public class Interpreter {
         }
     }
 
-//    public static boolean isNumeric(String str) {
-//        try {
-//            double d = Double.parseDouble(str);
-//        } catch (NumberFormatException nfe) {
-//            return false;
-//        }
-//        return true;
-//    }
+
+    private void movePointer(String[] command) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }

@@ -20,6 +20,7 @@ public class Loop {
         this.startIndex = startIndex;
         this.endIndex = endIndex;
         this.iterations = iterations;
+        System.out.println("Made: " + name);
         
     }
 
