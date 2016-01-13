@@ -1,4 +1,14 @@
-repeat 6
-fd 100
-rt 60
-repeat end
+fd 50
+let to 2
+let drej 90
+let total 10
+rt drej+10*to/total
+fd 50
+let reverse -drej-10/to*total
+let total 20
+let reverse -drej-10/to*total
+fd total
+rt drej
+bk reverse
+lt reverse
+fd 50
