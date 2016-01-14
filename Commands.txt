@@ -1,7 +1,20 @@
 lt 90
 mf 400 
 rt 90
-
+let min 2
+fd 50
+let to 2
+let drej 90
+let total 10
+rt drej+10*to/total
+fd 50
+let reverse -drej-10/to*total
+let total 20
+let reverse -drej-10/to*total
+fd total
+bk reverse
+lt reverse
+fd 50
 declare flower
 repeat 6
 color black
