@@ -90,7 +90,7 @@ public class Interpreter {
 //                
 //            }
             for (int i = 2; i < command.length; i++) {
-                temp = command[i].split("-|\\+|\\/|\\*,");
+                temp = command[i].split("-|\\+|\\/|\\*");
                 //System.out.println("Temp[0] "+temp[0]);
                 Arrays.sort(temp, new stringComp());
                 for (int j = 0; j < temp.length; j++) {
@@ -289,9 +289,7 @@ for (int i = 0; i < temp.length; i++) {
 
     private void turnTo(String[] command) {
         if (command.length > 1&&isNumeric(command[1])) {
-            this.angle = Double.parseDouble(command[1]);
-        } else {
-            System.out.println("Ingen værdi");
+            System.out.println("Lykkedes");
         }
 
     }
