@@ -1,24 +1,30 @@
-repeat 5
+lt 90
+mf 400 
+rt 90
+
+declare flower
+repeat 6
 color black
-fd 100
-repeat 10
-color red
-fd 50
+fd 30
 repeat 100
-color yellow
+color red
 fd 10
-color blue
-fd 1
-bk 1
-color yellow
 bk 10
 rt 3.6
 repeat end
-color red
-bk 50
-rt 36
+bk 30
+rt 60
 repeat end
+declare end
+
+repeat 10
 color black
-bk 100
-rt 72
+rt 90 
+fd 80
+lt 90
+fd 100
+
+call flower
+bk 100 
 repeat end
+
