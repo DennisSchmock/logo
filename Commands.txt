@@ -1,4 +1,8 @@
-fd 10
-moveto 30,30
-fd 10
-turnto sdf
+let yaxis 100
+moveto 10,10
+fd 100
+let yaxis - 10
+moveto 0,20
+fd 100
+move
+fd yaxis

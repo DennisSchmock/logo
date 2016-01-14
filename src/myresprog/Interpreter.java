@@ -67,7 +67,7 @@ public class Interpreter {
         String[] temp;
         if (!command[0].equals("let")) {
             for (int i = 1; i < command.length; i++) {
-                temp = command[i].split("-|\\+|\\/|\\*");
+                temp = command[i].split("-|\\+|\\/|\\*,");
 //            System.out.println("Temp[0] "+temp[0]);
                 Arrays.sort(temp, new stringComp());
                 for (int j = 0; j < temp.length; j++) {
@@ -88,7 +88,7 @@ public class Interpreter {
                 vars.remove(command[1]);
             }
             for (int i = 2; i < command.length; i++) {
-                temp = command[i].split("-|\\+|\\/|\\*");
+                temp = command[i].split("-|\\+|\\/|\\*,");
                 //System.out.println("Temp[0] "+temp[0]);
                 Arrays.sort(temp, new stringComp());
                 for (int j = 0; j < temp.length; j++) {
@@ -277,7 +277,9 @@ public class Interpreter {
 
     private void turnTo(String[] command) {
         if (command.length > 1&&isNumeric(command[1])) {
-            System.out.println("Lykkedes");
+            this.angle = Double.parseDouble(command[1]);
+        } else {
+            System.out.println("Ingen værdi");
         }
 
     }
