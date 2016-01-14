@@ -60,7 +60,8 @@ public class Interpreter {
     }
 
     private boolean shouldCalculate(String command) {
-        return (command.equals("fd") || command.equals("bk") || command.equals("rt") || command.equals("lt"));
+        return (command.equals("fd") || command.equals("bk") || command.equals("rt") || command.equals("lt")
+                || command.equals("moveto"));
     }
 
     private void substituteVars(String[] command) {
@@ -107,10 +108,17 @@ public class Interpreter {
     }
 
     private String calculateExp(String cal) {
+        String[] temp = cal.split(",");
+        String toSendBack="";
 //        System.out.println("We calculate");
-        Expression e = new ExpressionBuilder(cal).build();
+for (int i = 0; i < temp.length; i++) {
+            Expression e = new ExpressionBuilder(temp[i]).build();
+            toSendBack+=String.valueOf(e.evaluate());
+            if (i<temp.length-1) toSendBack+=",";
+        }
+
 //        System.out.println(String.valueOf(e.evaluate()));
-        return (String.valueOf(e.evaluate()));
+        return toSendBack;
 
     }
 
