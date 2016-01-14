@@ -7,6 +7,7 @@ package myresprog;
 
 import java.awt.Color;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
@@ -44,10 +45,78 @@ public class Interpreter {
 
     public void performNextAction() {
         command = this.getCommands().get(getProgramCounter());
+        //translateCommand(command);
+        substituteVars(command);
+//        System.out.println("Command: "+command[1]);
+        if (shouldCalculate(command[0])) command[1]=calculateExp(command[1]);
+//        System.out.println("Command after calculation: "+command[1]);
         interpretCommand(command);
         System.out.println(programCounter);
         programCounter++;
 
+    }
+    
+    private boolean shouldCalculate(String command){
+        return (command.equals("fd")||command.equals("bk")||command.equals("rt")||command.equals("lt"));
+    }
+    private void substituteVars(String[] command){
+        String[] temp;
+        if (!command[0].equals("let")){
+        for (int i = 1; i < command.length; i++) {
+            temp=command[i].split("-|\\+|\\/|\\*");
+//            System.out.println("Temp[0] "+temp[0]);
+            Arrays.sort(temp,new stringComp());
+            for (int j = 0; j < temp.length; j++) {
+            
+            if (vars.containsKey(temp[j])){
+//                System.out.println("Vars contains "+ temp[j]);
+//                System.out.println("Value of: "+vars.get(temp[j]));
+//                System.out.println("Old string"+this.command[i]);
+                this.command[i]=this.command[i].replaceAll(temp[j], String.valueOf(vars.get(temp[j])));
+//                System.out.println("New string"+this.command[i]);
+            }
+            }
+        }
+        }
+        else{
+            double valueOf=0;
+            if (vars.containsKey(command[1])){
+                valueOf=(double)vars.get(command[1]);
+                vars.remove(command[1]);
+            }
+                for (int i = 2; i < command.length; i++) {
+            temp=command[i].split("-|\\+|\\/|\\*");
+            //System.out.println("Temp[0] "+temp[0]);
+            Arrays.sort(temp,new stringComp());
+            for (int j = 0; j < temp.length; j++) {
+            
+            if (vars.containsKey(temp[j])){
+//                System.out.println("Vars contains "+ temp[j]);
+//                System.out.println("Value of: "+vars.get(temp[j]));
+//                System.out.println("Old string"+this.command[i]);
+                this.command[i]=this.command[i].replaceAll(temp[j], String.valueOf(vars.get(temp[j])));
+//                System.out.println("New string"+this.command[i]);
+            }
+            }
+        }
+                }
+    
+    }
+    private String calculateExp(String cal){
+//        System.out.println("We calculate");
+        Expression e = new ExpressionBuilder(cal).build();
+//        System.out.println(String.valueOf(e.evaluate()));
+                return(String.valueOf(e.evaluate()));
+                
+    }
+    
+    private void translateCommand(String[] command){
+        if (!command[0].equals("let")){
+            for (int i = 1; i < command.length; i++) {
+                if (vars.containsKey(command[i])) command[i]=String.valueOf(vars.get(command[i]));
+            }
+        }
+        this.command=command;
     }
 
     private void interpretCommand(String[] command) {
@@ -55,13 +124,13 @@ public class Interpreter {
         switch (tempString) {
             case "fd":
                 if (isNumeric(command[1])) {
-                    currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]), angle);
+                    currentPoint = FindPoint.findNewPoint(oldPoint, (int)Double.parseDouble(command[1]), angle);
                 }
                 mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
                 oldPoint = currentPoint;
                 break;
             case "bk":
-                currentPoint = FindPoint.findNewPoint(oldPoint, Integer.parseInt(command[1]) * -1, angle);
+                currentPoint = FindPoint.findNewPoint(oldPoint, (int)Double.parseDouble(command[1]) * -1, angle);
                 mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
                 oldPoint = currentPoint;
                 break;
@@ -78,7 +147,7 @@ public class Interpreter {
                 }
                 Expression e = new ExpressionBuilder(expString).build();
                 vars.putIfAbsent(command[1], e.evaluate());
-                System.out.println("Expression added: " + command[1] + " with the value " + e.evaluate());
+//                System.out.println("Expression added: " + command[1] + " with the value " + e.evaluate());
                 break;
             case "repeat":
                 repeatCommands(command);
