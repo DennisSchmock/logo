@@ -1,4 +1,6 @@
 fd 10
-moveto 30,30
+
+let ti 10
+let to 200
+moveto to,ti
 fd 10
-turnto sdf

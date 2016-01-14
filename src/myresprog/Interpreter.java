@@ -67,7 +67,7 @@ public class Interpreter {
         String[] temp;
         if (!command[0].equals("let")) {
             for (int i = 1; i < command.length; i++) {
-                temp = command[i].split("-|\\+|\\/|\\*");
+                temp = command[i].split("-|\\+|\\/|\\*|\\,");
 //            System.out.println("Temp[0] "+temp[0]);
                 Arrays.sort(temp, new stringComp());
                 for (int j = 0; j < temp.length; j++) {
@@ -264,6 +264,7 @@ public class Interpreter {
 
     private void moveTo(String[] command) {
         if (command.length > 1) {
+            System.out.println("Cmd 1 "+command[1]);
             String[] coordinates = command[1].split(",");
             if (coordinates.length > 1 && isNumeric(coordinates[0]) && isNumeric(coordinates[1])) {
                 currentPoint.setX(Double.parseDouble(coordinates[0]));
