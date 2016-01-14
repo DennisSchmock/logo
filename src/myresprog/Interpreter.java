@@ -46,6 +46,7 @@ public class Interpreter {
     public void performNextAction() {
         command = this.getCommands().get(getProgramCounter());
         //translateCommand(command);
+
         substituteVars(command);
 //        System.out.println("Command: "+command[1]);
         if (shouldCalculate(command[0])) {
@@ -172,6 +173,13 @@ public class Interpreter {
             case "call":
                 callProcedure(command);
                 break;
+            case "moveto":
+                moveTo(command);
+                break;
+            case "turnto":
+                turnTo(command);
+                break;
+            default:
 
         }
 
@@ -202,16 +210,11 @@ public class Interpreter {
                 }
                 programCounter = intLoop.getStartIndex();
                 intLoop.setIterations(intLoop.getIterations() - 1);
-
             }
-
         }
-
         if (isNumeric(command[1])) {
             loops.add(new Loop("Loop" + programCounter, programCounter, 0, Integer.parseInt(command[1]) - 1));
-
         }
-
     }
 
     private void scanForProcedures() {
@@ -256,6 +259,26 @@ public class Interpreter {
         Procedure tempProc = (Procedure) procedures.get(command[1]);
         System.out.println(tempProc);
         programCounter = tempProc.getProcEnd();
+
+    }
+
+    private void moveTo(String[] command) {
+        if (command.length > 1) {
+            String[] coordinates = command[1].split(",");
+            if (coordinates.length > 1 && isNumeric(coordinates[0]) && isNumeric(coordinates[1])) {
+                currentPoint.setX(Double.parseDouble(coordinates[0]));
+                currentPoint.setY(Double.parseDouble(coordinates[1]));
+                oldPoint = currentPoint;
+
+            }
+        }
+
+    }
+
+    private void turnTo(String[] command) {
+        if (command.length > 1&&isNumeric(command[1])) {
+            System.out.println("Lykkedes");
+        }
 
     }
 

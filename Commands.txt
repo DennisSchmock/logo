@@ -1,43 +1,4 @@
-lt 90
-mf 400 
-rt 90
-let min 2
-fd 50
-let to 2
-let drej 90
-let total 10
-rt drej+10*to/total
-fd 50
-let reverse -drej-10/to*total
-let total 20
-let reverse -drej-10/to*total
-fd total
-bk reverse
-lt reverse
-fd 50
-declare flower
-repeat 6
-color black
-fd 30
-repeat 100
-color red
 fd 10
-bk 10
-rt 3.6
-repeat end
-bk 30
-rt 60
-repeat end
-declare end
-
-repeat 10
-color black
-rt 90 
-fd 80
-lt 90
-fd 100
-
-call flower
-bk 100 
-repeat end
-
+moveto 30,30
+fd 10
+turnto sdf
