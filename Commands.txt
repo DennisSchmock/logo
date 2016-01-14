@@ -2,5 +2,9 @@ fd 10
 
 let ti 10
 let to 200
+let to 400
 moveto to,ti*ti
 fd 10
+let ti ti*ti
+rt ti
+fd ti

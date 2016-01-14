@@ -83,16 +83,18 @@ public class Interpreter {
                 }
             }
         } else {
-            double valueOf = 0;
-            if (vars.containsKey(command[1])) {
-                valueOf = (double) vars.get(command[1]);
-                vars.remove(command[1]);
-            }
+//            double value = 0;
+//            if (vars.containsKey(command[1])) {
+//                value = (double) vars.get(command[1]);
+//                vars.remove(command[1]);
+//                
+//            }
             for (int i = 2; i < command.length; i++) {
                 temp = command[i].split("-|\\+|\\/|\\*");
                 //System.out.println("Temp[0] "+temp[0]);
                 Arrays.sort(temp, new stringComp());
                 for (int j = 0; j < temp.length; j++) {
+                    //if (String.valueOf(value).length())
 
                     if (vars.containsKey(temp[j])) {
 //                System.out.println("Vars contains "+ temp[j]);
@@ -160,8 +162,9 @@ for (int i = 0; i < temp.length; i++) {
                     expString += command[i];
                 }
                 Expression e = new ExpressionBuilder(expString).build();
-                vars.putIfAbsent(command[1], e.evaluate());
-//                System.out.println("Expression added: " + command[1] + " with the value " + e.evaluate());
+                vars.put(command[1], e.evaluate());
+                
+                System.out.println("Expression added: " + command[1] + " with the value " + e.evaluate());
                 break;
             case "repeat":
                 repeatCommands(command);
