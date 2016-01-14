@@ -1,8 +1,7 @@
-let yaxis 100
-moveto 10,10
+turnto 90
+let yaxis 500
+moveto 10,yaxis
 fd 100
-let yaxis - 10
-moveto 0,20
+let yaxis 400
+moveto 10,yaxis
 fd 100
-move
-fd yaxis

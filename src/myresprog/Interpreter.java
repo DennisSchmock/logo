@@ -60,14 +60,15 @@ public class Interpreter {
     }
 
     private boolean shouldCalculate(String command) {
-        return (command.equals("fd") || command.equals("bk") || command.equals("rt") || command.equals("lt"));
+        return (command.equals("fd") || command.equals("bk") || command.equals("rt") || command.equals("lt")
+                || command.equals("moveto"));
     }
 
     private void substituteVars(String[] command) {
         String[] temp;
         if (!command[0].equals("let")) {
             for (int i = 1; i < command.length; i++) {
-                temp = command[i].split("-|\\+|\\/|\\*,");
+                temp = command[i].split("-|\\+|\\/|\\*|\\,");
 //            System.out.println("Temp[0] "+temp[0]);
                 Arrays.sort(temp, new stringComp());
                 for (int j = 0; j < temp.length; j++) {
@@ -107,10 +108,17 @@ public class Interpreter {
     }
 
     private String calculateExp(String cal) {
+        String[] temp = cal.split(",");
+        String toSendBack="";
 //        System.out.println("We calculate");
-        Expression e = new ExpressionBuilder(cal).build();
+for (int i = 0; i < temp.length; i++) {
+            Expression e = new ExpressionBuilder(temp[i]).build();
+            toSendBack+=String.valueOf(e.evaluate());
+            if (i<temp.length-1) toSendBack+=",";
+        }
+
 //        System.out.println(String.valueOf(e.evaluate()));
-        return (String.valueOf(e.evaluate()));
+        return toSendBack;
 
     }
 
@@ -264,6 +272,7 @@ public class Interpreter {
 
     private void moveTo(String[] command) {
         if (command.length > 1) {
+            System.out.println("Cmd 1 "+command[1]);
             String[] coordinates = command[1].split(",");
             if (coordinates.length > 1 && isNumeric(coordinates[0]) && isNumeric(coordinates[1])) {
                 currentPoint.setX(Double.parseDouble(coordinates[0]));
