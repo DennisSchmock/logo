@@ -54,8 +54,9 @@ public class Interpreter {
         }
 //        System.out.println("Command after calculation: "+command[1]);
         interpretCommand(command);
-        System.out.println(programCounter);
+        // System.out.println(programCounter);
         programCounter++;
+        System.out.println(vars);
 
     }
 
@@ -111,12 +112,14 @@ public class Interpreter {
 
     private String calculateExp(String cal) {
         String[] temp = cal.split(",");
-        String toSendBack="";
+        String toSendBack = "";
 //        System.out.println("We calculate");
-for (int i = 0; i < temp.length; i++) {
+        for (int i = 0; i < temp.length; i++) {
             Expression e = new ExpressionBuilder(temp[i]).build();
-            toSendBack+=String.valueOf(e.evaluate());
-            if (i<temp.length-1) toSendBack+=",";
+            toSendBack += String.valueOf(e.evaluate());
+            if (i < temp.length - 1) {
+                toSendBack += ",";
+            }
         }
 
 //        System.out.println(String.valueOf(e.evaluate()));
@@ -163,7 +166,7 @@ for (int i = 0; i < temp.length; i++) {
                 }
                 Expression e = new ExpressionBuilder(expString).build();
                 vars.put(command[1], e.evaluate());
-                
+
                 System.out.println("Expression added: " + command[1] + " with the value " + e.evaluate());
                 break;
             case "repeat":
@@ -219,6 +222,7 @@ for (int i = 0; i < temp.length; i++) {
                     System.out.println("Ended loop");
                     return;
                 }
+                System.out.println("Jumping to: " + intLoop.getStartIndex());
                 programCounter = intLoop.getStartIndex();
                 intLoop.setIterations(intLoop.getIterations() - 1);
             }
@@ -228,7 +232,7 @@ for (int i = 0; i < temp.length; i++) {
         }
     }
 
-    private void scanForProcedures() {
+    public void scanForProcedures() {
         int tempInt = 0;
         int endProc;
 
@@ -275,7 +279,7 @@ for (int i = 0; i < temp.length; i++) {
 
     private void moveTo(String[] command) {
         if (command.length > 1) {
-            System.out.println("Cmd 1 "+command[1]);
+            System.out.println("Cmd 1 " + command[1]);
             String[] coordinates = command[1].split(",");
             if (coordinates.length > 1 && isNumeric(coordinates[0]) && isNumeric(coordinates[1])) {
                 currentPoint.setX(Double.parseDouble(coordinates[0]));
@@ -288,7 +292,7 @@ for (int i = 0; i < temp.length; i++) {
     }
 
     private void turnTo(String[] command) {
-        if (command.length > 1&&isNumeric(command[1])) {
+        if (command.length > 1 && isNumeric(command[1])) {
             System.out.println("Lykkedes");
         }
 
@@ -419,6 +423,15 @@ for (int i = 0; i < temp.length; i++) {
      */
     public void setProgramCounter(int aProgramCounter) {
         programCounter = aProgramCounter;
+    }
+
+    public void reset() {
+        programCounter = 0;
+        angle = 0;
+        oldPoint = new Point(400, 300);
+        currentPoint = oldPoint;
+        loops = new ArrayList<>();
+
     }
 
 }
