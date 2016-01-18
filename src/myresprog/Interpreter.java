@@ -46,9 +46,12 @@ public class Interpreter {
     public void performNextAction() {
         command = this.getCommands().get(getProgramCounter());
         //translateCommand(command);
-        
+        if (runningProcedures.size() > 0) {
+            substituteVars(command,runningProcedures.get(runningProcedures.size()-1).getLocalVars());
+        } else{
 
         substituteVars(command, this.vars);
+        }
 //        System.out.println("Command: "+command[1]);
         if (shouldCalculate(command[0])) {
             command[1] = calculateExp(command[1]);
@@ -231,11 +234,10 @@ public class Interpreter {
     public void scanForProcedures() {
         int tempInt = 0;
         int endProc;
-        
 
         for (String[] command1 : commands) {
-            if (command1.length<=0){}
-            else if (command1[0].equalsIgnoreCase("declare") && command1.length <= 1) {
+            if (command1.length <= 0) {
+            } else if (command1[0].equalsIgnoreCase("declare") && command1.length <= 1) {
                 System.out.println("Do nothing");
 
             } else if (command1[0].equalsIgnoreCase("declare") && !command1[1].equalsIgnoreCase("end")) {
@@ -301,7 +303,7 @@ public class Interpreter {
         if (command.length <= 1) {
             return;
         }
-        Procedure tempProc = new Procedure(command[1], start, end);
+        Procedure tempProc = new Procedure(command[1], start, end, command);
         procedures.put(command[1], tempProc);
         if (command.length > 2) {
             for (int i = 2; i < command.length; i++) {
@@ -319,49 +321,55 @@ public class Interpreter {
             return;
         }
         Procedure tempProc = (Procedure) procedures.get(command[1]);
-        if (tempProc.getLocalVars().size() > 0) {
-            if (tempProc.getLocalVars().size() == command.length - 2) {
-                for (int i = 2; i < command.length; i++) {
-                    
+        if (command.length > 2&&procedures.containsKey(command[1])) {
+
+            for (int i = 2; i < command.length; i++) {
+                String tempVar = "tempvar" + i;
+                if (tempProc.getProcedureCommand().length==command.length){
+                    tempVar = tempProc.getProcedureCommand()[i];
                 }
-            } else{
-                System.out.println("WTF!");
+                tempProc.getLocalVars().put(tempVar, command[i]);
             }
+            
+            System.out.println(tempProc.getProcName());
+            tempProc.setCallPoint(programCounter);
+            programCounter = tempProc.getProcStart();
+            runningProcedures.add(tempProc);
 
         }
-        System.out.println(tempProc.getProcName());
-        tempProc.setCallPoint(programCounter);
-        programCounter = tempProc.getProcStart();
-        runningProcedures.add(tempProc);
-
     }
 
+    
+
     private void changeColor(String[] s) {
-        String temp = "";
-        if (s.length > 1) {
-            temp = s[1];
+        int temp = 0;
+        if (s.length > 1&&isNumeric(s[1])) {
+            temp = Integer.parseInt(s[1]);
+            if(temp>13){
+                temp = temp%13;
+            }
         }
-        // s.toLowerCase();
-        switch (temp) {
-            case "red":
-                mainPanel.setColor(Color.RED);
-                break;
-            case "yellow":
-                mainPanel.setColor(Color.YELLOW);
-                break;
-            case "green":
-                mainPanel.setColor(Color.GREEN);
-                break;
-            case "blue":
-                mainPanel.setColor(Color.BLUE);
-                break;
-            case "black":
-                mainPanel.setColor(Color.BLACK);
-                break;
-            default:
-                mainPanel.setColor(Color.BLACK);
-                break;
-        }
+        if (temp==0)mainPanel.setColor(Color.BLACK);
+        if (temp==1)mainPanel.setColor(Color.BLUE);
+        if (temp==2)mainPanel.setColor(Color.CYAN);
+        if (temp==3)mainPanel.setColor(Color.DARK_GRAY);
+        if (temp==4)mainPanel.setColor(Color.GRAY);
+        if (temp==5)mainPanel.setColor(Color.GREEN);
+        if (temp==6)mainPanel.setColor(Color.LIGHT_GRAY);
+        if (temp==7)mainPanel.setColor(Color.MAGENTA);
+        if (temp==8)mainPanel.setColor(Color.ORANGE);
+        if (temp==9)mainPanel.setColor(Color.PINK);
+        if (temp==10)mainPanel.setColor(Color.RED);
+        if (temp==11)mainPanel.setColor(Color.WHITE);
+        if (temp==12)mainPanel.setColor(Color.YELLOW);
+       
+        
+        
+        
+            
+        
+       
+        
     }
 
     private void movePointerForward(String[] command) {

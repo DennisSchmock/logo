@@ -17,15 +17,16 @@ public class Procedure {
     private int procStart;
     private int procEnd;
     private int callPoint;
-    ArrayList<String> localVarsNames = new ArrayList<>();
     private HashMap localVars = new HashMap();
+    private String[] procedureCommand;
     
     
-    public Procedure(String name, int procStart, int procEnd){
+    public Procedure(String name, int procStart, int procEnd, String[] command){
         this.procName = name;
         this.procStart = procStart;
         this.procEnd = procEnd;
         System.out.println("Name: " + name + " Start: " + procStart + " End: " + procEnd);
+        this.procedureCommand = command;
     }
     
     public void changeVar(HashMap m,String key, int value){
@@ -104,6 +105,20 @@ public class Procedure {
      */
     public void setLocalVars(HashMap localVars) {
         this.localVars = localVars;
+    }
+
+    /**
+     * @return the procedureCommand
+     */
+    public String[] getProcedureCommand() {
+        return procedureCommand;
+    }
+
+    /**
+     * @param procedureCommand the procedureCommand to set
+     */
+    public void setProcedureCommand(String[] procedureCommand) {
+        this.procedureCommand = procedureCommand;
     }
     
 }
