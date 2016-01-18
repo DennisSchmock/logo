@@ -215,8 +215,10 @@ public class MainPanel extends javax.swing.JFrame {
         String[] s = jTextArea1.getText().split("\\n");
         ArrayList<String[]> tempList = new ArrayList<>();
         for (String s1 : s) {
+            if(s1.length()>0){
             String[] temp = s1.split(" ");
             tempList.add(temp);
+            }
 
         }
         for (String[] tempList1 : tempList) {

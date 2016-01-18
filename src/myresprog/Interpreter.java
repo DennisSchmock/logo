@@ -68,7 +68,7 @@ public class Interpreter {
 
     private void substituteVars(String[] command) {             //Substitute declared variables with values at time of execution
         System.out.println("Subvars running");
-        if (!command[0].equals("let") && !command[0].equals("repeat")) {
+        if (!command[0].equals("let") && !command[0].equals("repeat")&& !command[0].equals("call")&& !command[0].equals("declare")) {
             String expString = "";
             String[] temp = command[1].split(",");
             for (int i = 0; i < temp.length; i++) {
@@ -253,8 +253,10 @@ public class Interpreter {
         if (command.length <= 1) {
             return;
         }
+        
         Procedure tempProc = new Procedure(command[1], start, end, command);
         procedures.put(command[1], tempProc);
+        System.out.println("Name of proc:" + command[1]);
         if (command.length > 2) {
             for (int i = 2; i < command.length; i++) {
                 tempProc.getLocalVars().put(command[i], 0);
@@ -266,8 +268,9 @@ public class Interpreter {
     }
 
     private void callProcedure(String[] command) {
-        System.out.println("Trying to call");
+        System.out.println("Trying to call:" + command[1]);
         if (command.length <= 1) {
+            System.out.println("Return, size is: " + command.length);
             return;
         }
         Procedure tempProc = (Procedure) procedures.get(command[1]);
@@ -281,7 +284,6 @@ public class Interpreter {
                 tempProc.getLocalVars().put(tempVar, command[i]);
             }
             
-            System.out.println(tempProc.getProcName());
             tempProc.setCallPoint(programCounter);
             programCounter = tempProc.getProcStart();
             runningProcedures.add(tempProc);
