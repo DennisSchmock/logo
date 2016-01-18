@@ -23,6 +23,7 @@ public class Interpreter {
     private LineReader lr;
     private ArrayList<String[]> commands;
     private String[] command;
+    private String[] commandToExecute;
     private int programCounter;
     private MainPanel mainPanel;
     private double angle;
@@ -40,99 +41,46 @@ public class Interpreter {
         currentPoint = oldPoint;
         loops = new ArrayList<>();
         scanForProcedures();
-
     }
 
     public void performNextAction() {
         command = this.getCommands().get(getProgramCounter());
-        //translateCommand(command);
-
-        substituteVars(command);
-//        System.out.println("Command: "+command[1]);
-        if (shouldCalculate(command[0])) {
-            command[1] = calculateExp(command[1]);
-        }
-//        System.out.println("Command after calculation: "+command[1]);
-        interpretCommand(command);
+        makeCommandToExecute();
+        substituteVars(commandToExecute);
+        interpretCommand(commandToExecute);
         System.out.println(programCounter);
         programCounter++;
-
     }
 
-    private boolean shouldCalculate(String command) {
-        return (command.equals("fd") || command.equals("bk") || command.equals("rt") || command.equals("lt")
-                || command.equals("moveto"));
-    }
+    private void makeCommandToExecute() {
+        commandToExecute = new String[2];
+        commandToExecute[0] = command[0];
+        commandToExecute[1] = "";
 
-    private void substituteVars(String[] command) {
-        String[] temp;
-        if (!command[0].equals("let")) {
-            for (int i = 1; i < command.length; i++) {
-                temp = command[i].split("-|\\+|\\/|\\*|\\,");
-//            System.out.println("Temp[0] "+temp[0]);
-                Arrays.sort(temp, new stringComp());
-                for (int j = 0; j < temp.length; j++) {
-
-                    if (vars.containsKey(temp[j])) {
-//                System.out.println("Vars contains "+ temp[j]);
-//                System.out.println("Value of: "+vars.get(temp[j]));
-//                System.out.println("Old string"+this.command[i]);
-                        this.command[i] = this.command[i].replaceAll(temp[j], String.valueOf(vars.get(temp[j])));
-//                System.out.println("New string"+this.command[i]);
-                    }
-                }
-            }
-        } else {
-//            double value = 0;
-//            if (vars.containsKey(command[1])) {
-//                value = (double) vars.get(command[1]);
-//                vars.remove(command[1]);
-//                
-//            }
-            for (int i = 2; i < command.length; i++) {
-                temp = command[i].split("-|\\+|\\/|\\*");
-                //System.out.println("Temp[0] "+temp[0]);
-                Arrays.sort(temp, new stringComp());
-                for (int j = 0; j < temp.length; j++) {
-                    //if (String.valueOf(value).length())
-
-                    if (vars.containsKey(temp[j])) {
-//                System.out.println("Vars contains "+ temp[j]);
-//                System.out.println("Value of: "+vars.get(temp[j]));
-//                System.out.println("Old string"+this.command[i]);
-                        this.command[i] = this.command[i].replaceAll(temp[j], String.valueOf(vars.get(temp[j])));
-//                System.out.println("New string"+this.command[i]);
-                    }
-                }
+        for (int i = 1; i < command.length; i++) {
+            if (i == 1) {
+                commandToExecute[1] += command[i];
+            } else {
+                commandToExecute[1] += " " + command[i];
             }
         }
-
     }
 
-    private String calculateExp(String cal) {
-        String[] temp = cal.split(",");
-        String toSendBack="";
-//        System.out.println("We calculate");
-for (int i = 0; i < temp.length; i++) {
-            Expression e = new ExpressionBuilder(temp[i]).build();
-            toSendBack+=String.valueOf(e.evaluate());
-            if (i<temp.length-1) toSendBack+=",";
-        }
-
-//        System.out.println(String.valueOf(e.evaluate()));
-        return toSendBack;
-
-    }
-
-    private void translateCommand(String[] command) {
-        if (!command[0].equals("let")) {
-            for (int i = 1; i < command.length; i++) {
-                if (vars.containsKey(command[i])) {
-                    command[i] = String.valueOf(vars.get(command[i]));
+    private void substituteVars(String[] command) {             //Substitute declared variables with values at time of execution
+        System.out.println("Subvars running");
+        if (!command[0].equals("let") && !command[0].equals("repeat")) {
+            String expString = "";
+            String[] temp = command[1].split(",");
+            for (int i = 0; i < temp.length; i++) {
+                for (int k = 0; k < temp.length; k++) {
+                    expString = temp[k];
                 }
+                System.out.println("Expr string: " + expString);
+                Expression e = new ExpressionBuilder(expString).variables(vars.keySet()).build();
+                e.setVariables(vars);
+                commandToExecute[1] = commandToExecute[1].replace(temp[i], String.valueOf(e.evaluate()));
             }
         }
-        this.command = command;
     }
 
     private void interpretCommand(String[] command) {
@@ -157,14 +105,7 @@ for (int i = 0; i < temp.length; i++) {
                 angle = angle - Double.parseDouble(command[1]);
                 break;
             case "let":
-                String expString = "";
-                for (int i = 2; i < command.length; i++) {
-                    expString += command[i];
-                }
-                Expression e = new ExpressionBuilder(expString).build();
-                vars.put(command[1], e.evaluate());
-                
-                System.out.println("Expression added: " + command[1] + " with the value " + e.evaluate());
+                let();
                 break;
             case "repeat":
                 repeatCommands(command);
@@ -191,9 +132,20 @@ for (int i = 0; i < temp.length; i++) {
                 turnTo(command);
                 break;
             default:
-
         }
+    }
 
+    public void let() {
+        String expString = "";
+        for (int i = 2; i < this.command.length; i++) {                 // Add everything after "let <var>"
+            expString += this.command[i];                               // to expString
+        }
+        Expression e = new ExpressionBuilder(expString).variables(vars.keySet()).build();
+        e.setVariables(vars);
+        commandToExecute[1] = commandToExecute[1].split(" ")[0];          // Find name of variable
+        vars.put(commandToExecute[1], e.evaluate());                    // Map name to value in map
+
+        System.out.println("Expression added: " + commandToExecute[1] + " with the value " + e.evaluate());
     }
 
     public static boolean isNumeric(String str) {
@@ -206,7 +158,7 @@ for (int i = 0; i < temp.length; i++) {
     }
 
     private void repeatCommands(String[] command) {
-        // mainPanel.timer.stop();
+//        // mainPanel.timer.stop();
         if (command.length <= 1) {
             return;
         }
@@ -224,7 +176,7 @@ for (int i = 0; i < temp.length; i++) {
             }
         }
         if (isNumeric(command[1])) {
-            loops.add(new Loop("Loop" + programCounter, programCounter, 0, Integer.parseInt(command[1]) - 1));
+            loops.add(new Loop("Loop" + programCounter, programCounter, 0, (int) Double.parseDouble(command[1]) - 1));
         }
     }
 
@@ -275,7 +227,7 @@ for (int i = 0; i < temp.length; i++) {
 
     private void moveTo(String[] command) {
         if (command.length > 1) {
-            System.out.println("Cmd 1 "+command[1]);
+            System.out.println("Cmd 1 " + command[1]);
             String[] coordinates = command[1].split(",");
             if (coordinates.length > 1 && isNumeric(coordinates[0]) && isNumeric(coordinates[1])) {
                 currentPoint.setX(Double.parseDouble(coordinates[0]));
@@ -288,7 +240,7 @@ for (int i = 0; i < temp.length; i++) {
     }
 
     private void turnTo(String[] command) {
-        if (command.length > 1&&isNumeric(command[1])) {
+        if (command.length > 1 && isNumeric(command[1])) {
             System.out.println("Lykkedes");
         }
 
