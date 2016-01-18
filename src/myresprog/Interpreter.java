@@ -342,6 +342,9 @@ public class Interpreter {
     
 
     private void changeColor(String[] s) {
+        for (String s1 : s) {
+            System.out.print(s1 + " ");
+        }
         int temp = 0;
         if (s.length > 1&&isNumeric(s[1])) {
             temp = Integer.parseInt(s[1]);
