@@ -5,6 +5,7 @@
  */
 package myresprog;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
@@ -16,6 +17,7 @@ public class Procedure {
     private int procStart;
     private int procEnd;
     private int callPoint;
+    ArrayList<String> localVarsNames = new ArrayList<>();
     private HashMap localVars = new HashMap();
     
     

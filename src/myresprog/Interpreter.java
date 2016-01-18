@@ -46,8 +46,9 @@ public class Interpreter {
     public void performNextAction() {
         command = this.getCommands().get(getProgramCounter());
         //translateCommand(command);
+        
 
-        substituteVars(command);
+        substituteVars(command, this.vars);
 //        System.out.println("Command: "+command[1]);
         if (shouldCalculate(command[0])) {
             command[1] = calculateExp(command[1]);
@@ -65,7 +66,7 @@ public class Interpreter {
                 || command.equals("moveto"));
     }
 
-    private void substituteVars(String[] command) {
+    private void substituteVars(String[] command, HashMap variables) {
         String[] temp;
         if (!command[0].equals("let")) {
             for (int i = 1; i < command.length; i++) {
@@ -74,22 +75,17 @@ public class Interpreter {
                 Arrays.sort(temp, new stringComp());
                 for (int j = 0; j < temp.length; j++) {
 
-                    if (vars.containsKey(temp[j])) {
+                    if (variables.containsKey(temp[j])) {
 //                System.out.println("Vars contains "+ temp[j]);
 //                System.out.println("Value of: "+vars.get(temp[j]));
 //                System.out.println("Old string"+this.command[i]);
-                        this.command[i] = this.command[i].replaceAll(temp[j], String.valueOf(vars.get(temp[j])));
+                        this.command[i] = this.command[i].replaceAll(temp[j], String.valueOf(variables.get(temp[j])));
 //                System.out.println("New string"+this.command[i]);
                     }
                 }
             }
         } else {
-//            double value = 0;
-//            if (vars.containsKey(command[1])) {
-//                value = (double) vars.get(command[1]);
-//                vars.remove(command[1]);
-//                
-//            }
+
             for (int i = 2; i < command.length; i++) {
                 temp = command[i].split("-|\\+|\\/|\\*");
                 //System.out.println("Temp[0] "+temp[0]);
@@ -97,11 +93,11 @@ public class Interpreter {
                 for (int j = 0; j < temp.length; j++) {
                     //if (String.valueOf(value).length())
 
-                    if (vars.containsKey(temp[j])) {
+                    if (variables.containsKey(temp[j])) {
 //                System.out.println("Vars contains "+ temp[j]);
 //                System.out.println("Value of: "+vars.get(temp[j]));
 //                System.out.println("Old string"+this.command[i]);
-                        this.command[i] = this.command[i].replaceAll(temp[j], String.valueOf(vars.get(temp[j])));
+                        this.command[i] = this.command[i].replaceAll(temp[j], String.valueOf(variables.get(temp[j])));
 //                System.out.println("New string"+this.command[i]);
                     }
                 }
@@ -182,7 +178,7 @@ public class Interpreter {
                 movePointerBack(command);
                 break;
             case "declare":
-                skipProcedure(command);
+                handleProcedure(command);
                 break;
             case "call":
                 callProcedure(command);
@@ -235,10 +231,13 @@ public class Interpreter {
     public void scanForProcedures() {
         int tempInt = 0;
         int endProc;
+        
 
         for (String[] command1 : commands) {
-            if (command1.length <= 1) {
+            if (command1.length<=0){}
+            else if (command1[0].equalsIgnoreCase("declare") && command1.length <= 1) {
                 System.out.println("Do nothing");
+
             } else if (command1[0].equalsIgnoreCase("declare") && !command1[1].equalsIgnoreCase("end")) {
                 endProc = findEndProc(commands, tempInt);
                 declareProcedure(command1, tempInt, endProc);
@@ -260,7 +259,7 @@ public class Interpreter {
 
     }
 
-    private void skipProcedure(String[] command) {
+    private void handleProcedure(String[] command) {
         if (command.length <= 1) {
             return;
         }
@@ -320,6 +319,16 @@ public class Interpreter {
             return;
         }
         Procedure tempProc = (Procedure) procedures.get(command[1]);
+        if (tempProc.getLocalVars().size() > 0) {
+            if (tempProc.getLocalVars().size() == command.length - 2) {
+                for (int i = 2; i < command.length; i++) {
+                    
+                }
+            } else{
+                System.out.println("WTF!");
+            }
+
+        }
         System.out.println(tempProc.getProcName());
         tempProc.setCallPoint(programCounter);
         programCounter = tempProc.getProcStart();

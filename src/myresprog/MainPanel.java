@@ -220,7 +220,7 @@ public class MainPanel extends javax.swing.JFrame {
 
         }
         for (String[] tempList1 : tempList) {
-            System.out.println(tempList1[0]);
+//            System.out.println(tempList1[0]);
         }
         intp.reset();
         jPanel1.repaint();
