@@ -41,6 +41,7 @@ public class Interpreter {
         currentPoint = oldPoint;
         loops = new ArrayList<>();
         scanForProcedures();
+        
     }
 
     public void performNextAction() {
@@ -273,6 +274,9 @@ public class Interpreter {
             System.out.println("Return, size is: " + command.length);
             return;
         }
+        for (String command1 : command) {
+            System.out.print(command1 + " ");
+        }
         Procedure tempProc = (Procedure) procedures.get(command[1]);
         if (command.length > 2&&procedures.containsKey(command[1])) {
 
@@ -283,12 +287,12 @@ public class Interpreter {
                 }
                 tempProc.getLocalVars().put(tempVar, command[i]);
             }
-            
+        }
             tempProc.setCallPoint(programCounter);
             programCounter = tempProc.getProcStart();
             runningProcedures.add(tempProc);
 
-        }
+        
     }
 
     
