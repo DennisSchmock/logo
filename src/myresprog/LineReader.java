@@ -37,6 +37,7 @@ public class LineReader implements Iterable<String>{
     public ArrayList<String[]> textFileToStringArrayList() {
         ArrayList<String[]> textArray = new ArrayList();
         for (String s : new LineReader(filename)) {
+            if(s.length()>0){
             textArray.add(s.split(" ",0));
             System.out.println("Added: "+s+ " to arraylist!");
             for (int i = 0; i < textArray.get(0).length; i++) {
@@ -45,6 +46,7 @@ public class LineReader implements Iterable<String>{
                 
                 
             }
+        }
         }
         return textArray;
     }
