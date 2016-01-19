@@ -105,6 +105,7 @@ public class Procedure {
      */
     public void setLocalVars(HashMap localVars) {
         this.localVars = localVars;
+        System.out.println("Local vars set");
     }
 
     /**

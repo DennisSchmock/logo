@@ -43,12 +43,9 @@ public class MainPanel extends javax.swing.JFrame {
 
     public void drawLine(Point a, Point b) {
         Graphics2D g2d = (Graphics2D) jPanel1.getGraphics();
-        g2d.setColor(getColor());
-        // System.out.println("X " + a.returnIntX() + " Y " + a.returnIntY() );
-        //System.out.println("X " + b.returnIntX() + " Y " + b.returnIntY() );
+        g2d.setColor(this.color);
+        System.out.println(this.color);
         g2d.drawLine(a.returnIntX(), a.returnIntY(), b.returnIntX(), b.returnIntY());
-        // g2d.drawLine(10, 10, 50, 50);
-        g2d.setColor(getColor());
     }
 
     public void theTimer() {
@@ -64,7 +61,7 @@ public class MainPanel extends javax.swing.JFrame {
 //                }
         };
 
-        timer = new Timer(0, actListner);
+        timer = new Timer(1, actListner);
         timer.start();
 
     }
