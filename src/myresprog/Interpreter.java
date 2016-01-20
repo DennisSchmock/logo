@@ -202,10 +202,8 @@ public class Interpreter {
 
                 if (intLoop.getIterations() <= 0) {
                     loops.remove(intLoop);
-                    System.out.println("Ended loop");
                     return;
                 }
-                System.out.println("Jumping to: " + intLoop.getStartIndex());
                 programCounter = intLoop.getStartIndex();
                 intLoop.setIterations(intLoop.getIterations() - 1);
             }
