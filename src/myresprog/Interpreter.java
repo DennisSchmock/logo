@@ -42,6 +42,7 @@ public class Interpreter {
         currentPoint = oldPoint;
         loops = new ArrayList<>();
         scanForProcedures();
+        
 
     }
 
@@ -253,19 +254,20 @@ public class Interpreter {
     }
 
     private void handleProcedure(String[] command) {
+        //If no command after declare, do nothing. //TODO: Output errormessage to user.
         if (command.length <= 1) {
             return;
         }
+        //If reached end of procedure, return to callpoint, end remove proc from stack
         if (command[1].equalsIgnoreCase("end")) {
             Procedure tempProc = runningProcedures.get(runningProcedures.size() - 1);
             programCounter = tempProc.getCallPoint();
             runningProcedures.remove(tempProc);
             return;
         }
+        //Jump to end of procedure.
         String tempString[] = command[1].split(" ");
-        System.out.println("x" + command[1] + "x");
         Procedure tempProc = (Procedure) procedures.get(tempString[0]);
-
         programCounter = tempProc.getProcEnd();
 
     }
@@ -291,7 +293,7 @@ public class Interpreter {
 
     private void turnTo(String[] command) {
         if (command.length > 1 && isNumeric(command[1])) {
-            System.out.println("Lykkedes");
+            this.angle = Double.parseDouble(command[1]);
         }
 
     }
@@ -300,19 +302,13 @@ public class Interpreter {
         if (command.length <= 1) {
             return;
         }
-
         Procedure tempProc = new Procedure(command[1], start, end, command);
         procedures.put(command[1], tempProc);
-        System.out.println("Name of proc: " + command[1]);
         if (command.length > 2) {
             for (int i = 2; i < command.length; i++) {
-                System.out.println("Trying to put in local vasr");
                 tempProc.getLocalVars().put(command[i], 0);
-
             }
-
         }
-
     }
 
     private void callProcedure(String[] command) {
