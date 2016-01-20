@@ -42,7 +42,6 @@ public class Interpreter {
         currentPoint = oldPoint;
         loops = new ArrayList<>();
         scanForProcedures();
-        
 
     }
 
@@ -156,8 +155,8 @@ public class Interpreter {
     }
 
     public void backWardsDrive(String[] command1) throws NumberFormatException {
-        if (isNumeric(command[1])){
-        currentPoint = FindPoint.findNewPoint(oldPoint, (int) Double.parseDouble(command1[1]) * -1, angle);
+        if (isNumeric(command[1])) {
+            currentPoint = FindPoint.findNewPoint(oldPoint, (int) Double.parseDouble(command1[1]) * -1, angle);
         }
         mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
         oldPoint = currentPoint;
@@ -351,10 +350,14 @@ public class Interpreter {
                 tempString[i] = substituteVarsTest(tempString[i], this.vars);
             }
             int tempInt = (int) Double.parseDouble(tempString[i]);
+            if (tempInt < 0) {
+                tempInt = tempInt * -1;
+            }
             if (tempInt > 255) {
                 tempInt = tempInt % 255;
 
             }
+
             c.add(tempInt);
         }
         for (int c1 : c) {
@@ -366,12 +369,14 @@ public class Interpreter {
             mainPanel.setColor(color);
             System.out.println(color);
             System.out.println("***");
-            
 
-        } else if (c.size()<3)  {
+        } else if (c.size() < 3) {
             int temp = 0;
             if (c.size() < 3) {
                 temp = c.get(0);
+                if (temp < 0) {
+                    temp = temp * -1;
+                }
                 if (temp > 13) {
                     temp = temp % 13;
                 }
@@ -500,7 +505,7 @@ public class Interpreter {
     }
 
     private void setStrokeWidth(String[] command) {
-        if (command.length>1&&isNumeric(command[1])){
+        if (command.length > 1 && isNumeric(command[1])) {
             mainPanel.setStrokeWidth(Float.parseFloat(command[1]));
         }
     }
