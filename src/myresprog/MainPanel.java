@@ -5,6 +5,7 @@
  */
 package myresprog;
 
+import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -31,6 +32,7 @@ public class MainPanel extends javax.swing.JFrame {
     private Interpreter intp;
     public Timer timer;
     private Color color;
+    private float strokeWidth = 1;
 
     /**
      * Creates new form MainPanel
@@ -44,7 +46,7 @@ public class MainPanel extends javax.swing.JFrame {
     public void drawLine(Point a, Point b) {
         Graphics2D g2d = (Graphics2D) jPanel1.getGraphics();
         g2d.setColor(this.color);
-        System.out.println(this.color);
+        g2d.setStroke(new BasicStroke(strokeWidth));
         g2d.drawLine(a.returnIntX(), a.returnIntY(), b.returnIntX(), b.returnIntY());
     }
 
@@ -332,6 +334,13 @@ public class MainPanel extends javax.swing.JFrame {
      */
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    /**
+     * @param strokeWidth the strokeWidth to set
+     */
+    public void setStrokeWidth(float strokeWidth) {
+        this.strokeWidth = strokeWidth;
     }
     
 

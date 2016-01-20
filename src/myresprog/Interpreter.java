@@ -105,16 +105,10 @@ public class Interpreter {
         String tempString = command[0].toLowerCase();
         switch (tempString) {
             case "fd":
-                if (isNumeric(command[1])) {
-                    currentPoint = FindPoint.findNewPoint(oldPoint, (int) Double.parseDouble(command[1]), angle);
-                }
-                mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
-                oldPoint = currentPoint;
+                forwardDrive(command);
                 break;
             case "bk":
-                currentPoint = FindPoint.findNewPoint(oldPoint, (int) Double.parseDouble(command[1]) * -1, angle);
-                mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
-                oldPoint = currentPoint;
+                backWardsDrive(command);
                 break;
             case "rt":
                 angle = angle + Double.parseDouble(command[1]);
@@ -131,6 +125,9 @@ public class Interpreter {
                 break;
             case "repeat":
                 repeatCommands(command);
+                break;
+            case "strokewidth":
+                setStrokeWidth(command);
                 break;
             case "color":
                 changeColor(command);
@@ -155,6 +152,22 @@ public class Interpreter {
                 break;
             default:
         }
+    }
+
+    public void backWardsDrive(String[] command1) throws NumberFormatException {
+        if (isNumeric(command[1])){
+        currentPoint = FindPoint.findNewPoint(oldPoint, (int) Double.parseDouble(command1[1]) * -1, angle);
+        }
+        mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
+        oldPoint = currentPoint;
+    }
+
+    public void forwardDrive(String[] command1) throws NumberFormatException {
+        if (isNumeric(command1[1])) {
+            currentPoint = FindPoint.findNewPoint(oldPoint, (int) Double.parseDouble(command1[1]), angle);
+        }
+        mainPanel.drawLine(oldPoint, new Point(FindPoint.getInt(currentPoint.getX()), FindPoint.getInt(currentPoint.getY())));
+        oldPoint = currentPoint;
     }
 
     public void let(HashMap vars) {
@@ -490,6 +503,12 @@ public class Interpreter {
         currentPoint = oldPoint;
         loops = new ArrayList<>();
 
+    }
+
+    private void setStrokeWidth(String[] command) {
+        if (command.length>1&&isNumeric(command[1])){
+            mainPanel.setStrokeWidth(Float.parseFloat(command[1]));
+        }
     }
 
 }
