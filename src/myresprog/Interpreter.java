@@ -73,10 +73,10 @@ public class Interpreter {
         }
     }
 
-    private void substituteVars(String[] command) {             //Substitute declared variables with values at time of execution
-        System.out.println("Subvars running on command "+command[0]);
-        if (!command[0].equals("let") && !command[0].equals("repeat")&& !command[0].equals("if")
-                && !command[0].equals("color")&& !command[0].equals("call")&& !command[0].equals("declare")) {
+    private void substituteVars(String[] command, HashMap vars) {             //Substitute declared variables with values at time of execution
+        System.out.println("Subvars running on command " + command[0]);
+        if (!command[0].equals("let") && !command[0].equals("repeat") && !command[0].equals("if")
+                && !command[0].equals("color") && !command[0].equals("call") && !command[0].equals("declare")) {
             String expString = "";
             String[] temp = command[1].split(",");
             for (int i = 0; i < temp.length; i++) {
@@ -338,9 +338,9 @@ public class Interpreter {
                 }
             }
         }
-            tempProc.setCallPoint(programCounter);
-            programCounter = tempProc.getProcStart();
-            runningProcedures.add(tempProc);
+        tempProc.setCallPoint(programCounter);
+        programCounter = tempProc.getProcStart();
+        runningProcedures.add(tempProc);
     }
 
     private void changeColor(String[] s) {
@@ -507,36 +507,41 @@ public class Interpreter {
     }
 
     private void doIf(String[] command) {
-        int ifStatements=0;
-        
+        int ifStatements = 0;
+
         String[] temp = command[1].split("==|\\<=|\\>=|\\<|\\>");               //Split by characters that might confuse
         for (int i = 0; i < temp.length; i++) {                                 //the evaluation
-            System.out.println("Temp["+i+"] "+temp[i]);
-            if (vars.containsKey(temp[i])){
-            
-            command[1]=command[1].replace(temp[i],String.valueOf( vars.get(temp[i])));
-            System.out.println(command[1]+temp[i]);
+            System.out.println("Temp[" + i + "] " + temp[i]);
+            if (vars.containsKey(temp[i])) {
+
+                command[1] = command[1].replace(temp[i], String.valueOf(vars.get(temp[i])));
+                System.out.println(command[1] + temp[i]);
             }
         }
-        
-        if (!command[1].equals("end") && !DoBoolean.DoBoolean(command[1])){     // If evaluation of the boolean comes back false
+
+        if (!command[1].equals("end") && !DoBoolean.DoBoolean(command[1])) {     // If evaluation of the boolean comes back false
             System.out.println("Boolean comes back false");                     // Skip to the end of the if statement
-            System.out.println("command " +command[0]+" "+command[1]);
-            System.out.println(!(command[0].equals("if")&&command[1].equals("end")));
-            while (!(command[0].equals("if")&&command[1].equals("end"))&& ifStatements!=-1){
-                System.out.println("We are in while with command: "+command[0]+ " " + command[1] );
-                if (command[0].equals("if")&&command[1].equals("end")&& ifStatements!=0) ifStatements--;
-                else if (command[0].equals("if")&&!command[1].equals("end"))ifStatements++;
+            System.out.println("command " + command[0] + " " + command[1]);
+            System.out.println(!(command[0].equals("if") && command[1].equals("end")));
+            while (!(command[0].equals("if") && command[1].equals("end")) && ifStatements != -1) {
+                System.out.println("We are in while with command: " + command[0] + " " + command[1]);
+                if (command[0].equals("if") && command[1].equals("end") && ifStatements != 0) {
+                    ifStatements--;
+                } else if (command[0].equals("if") && !command[1].equals("end")) {
+                    ifStatements++;
+                }
                 programCounter++;
                 command = this.getCommands().get(getProgramCounter());
-                System.out.println("doIf " + command[0]+ " "+command[1]);
-                
+                System.out.println("doIf " + command[0] + " " + command[1]);
+
             }
             //programCounter++;
+        }
+    }
+
     private void setStrokeWidth(String[] command) {
         if (command.length > 1 && isNumeric(command[1])) {
             mainPanel.setStrokeWidth(Float.parseFloat(command[1]));
         }
     }
-
 }
