@@ -67,8 +67,9 @@ public class Interpreter {
     }
 
     private void substituteVars(String[] command) {             //Substitute declared variables with values at time of execution
-        System.out.println("Subvars running");
-        if (!command[0].equals("let") && !command[0].equals("repeat")&& !command[0].equals("call")&& !command[0].equals("declare")) {
+        System.out.println("Subvars running on command "+command[0]);
+        if (!command[0].equals("let") && !command[0].equals("repeat")&& !command[0].equals("if")
+                && !command[0].equals("color")&& !command[0].equals("call")&& !command[0].equals("declare")) {
             String expString = "";
             String[] temp = command[1].split(",");
             for (int i = 0; i < temp.length; i++) {
@@ -130,6 +131,9 @@ public class Interpreter {
                 break;
             case "turnto":
                 turnTo(command);
+                break;
+            case "if":
+                doIf(command);
                 break;
             default:
         }
@@ -270,10 +274,11 @@ public class Interpreter {
     private void callProcedure(String[] command) {
         System.out.println("Trying to call:" + command[1]);
         if (command.length <= 1) {
-            System.out.println("Return, size is: " + command.length);
+            //System.out.println("Return, size is: " + command.length);
             return;
         }
         Procedure tempProc = (Procedure) procedures.get(command[1]);
+        //System.out.println("Command length "+command.length);
         if (command.length > 2&&procedures.containsKey(command[1])) {
 
             for (int i = 2; i < command.length; i++) {
@@ -283,12 +288,10 @@ public class Interpreter {
                 }
                 tempProc.getLocalVars().put(tempVar, command[i]);
             }
-            
+        }
             tempProc.setCallPoint(programCounter);
             programCounter = tempProc.getProcStart();
             runningProcedures.add(tempProc);
-
-        }
     }
 
     
@@ -404,6 +407,36 @@ public class Interpreter {
         currentPoint = oldPoint;
         loops = new ArrayList<>();
 
+    }
+
+    private void doIf(String[] command) {
+        int ifStatements=0;
+        
+        String[] temp = command[1].split("==|\\<=|\\>=|\\<|\\>");               //Split by characters that might confuse
+        for (int i = 0; i < temp.length; i++) {                                 //the evaluation
+            System.out.println("Temp["+i+"] "+temp[i]);
+            if (vars.containsKey(temp[i])){
+            
+            command[1]=command[1].replace(temp[i],String.valueOf( vars.get(temp[i])));
+            System.out.println(command[1]+temp[i]);
+            }
+        }
+        
+        if (!command[1].equals("end") && !DoBoolean.DoBoolean(command[1])){     // If evaluation of the boolean comes back false
+            System.out.println("Boolean comes back false");                     // Skip to the end of the if statement
+            System.out.println("command " +command[0]+" "+command[1]);
+            System.out.println(!(command[0].equals("if")&&command[1].equals("end")));
+            while (!(command[0].equals("if")&&command[1].equals("end"))&& ifStatements!=-1){
+                System.out.println("We are in while with command: "+command[0]+ " " + command[1] );
+                if (command[0].equals("if")&&command[1].equals("end")&& ifStatements!=0) ifStatements--;
+                else if (command[0].equals("if")&&!command[1].equals("end"))ifStatements++;
+                programCounter++;
+                command = this.getCommands().get(getProgramCounter());
+                System.out.println("doIf " + command[0]+ " "+command[1]);
+                
+            }
+            //programCounter++;
+        }
     }
 
 }

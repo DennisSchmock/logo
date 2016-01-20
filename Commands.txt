@@ -1,10 +1,14 @@
-fd 10
+let temp 10
+repeat 300
+let temp temp + 1
 
-let ti 10
-let to 200
-let to 400
-moveto to,ti*ti
+rt 90
+fd temp
+repeat end
+
+if 2>1
+repeat 10
 fd 10
-let ti ti*ti
-rt ti
-fd ti
+rt 40
+repeat end
+if end
