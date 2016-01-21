@@ -50,6 +50,7 @@ public class Interpreter {
         makeCommandToExecute();
         if (runningProcedures.size() > 0) {
             this.substituteVars(commandToExecute, runningProcedures.get(runningProcedures.size() - 1).getLocalVars());
+            System.out.println("Tried to use proccommands");
         } else {
             substituteVars(commandToExecute, this.vars);
         }
@@ -76,7 +77,7 @@ public class Interpreter {
     private void substituteVars(String[] command, HashMap vars) {             //Substitute declared variables with values at time of execution
         System.out.println("Subvars running on command " + command[0]);
         if (!command[0].equals("let") && !command[0].equals("repeat") && !command[0].equals("if")
-                && !command[0].equals("color") && !command[0].equals("call") && !command[0].equals("declare")) {
+                && !command[0].equals("color") && !command[0].equals("call") && !command[0].equals("declare") && !command[0].equals("background")) {
             String expString = "";
             String[] temp = command[1].split(",");
             for (int i = 0; i < temp.length; i++) {
@@ -152,8 +153,14 @@ public class Interpreter {
                 turnTo(command);
                 break;
             case "if":
-                doIf(command);
+                if (runningProcedures.size() > 0) {
+                    doIf(command, runningProcedures.get(runningProcedures.size() - 1).getLocalVars());
+                } else {
+                    doIf(command, this.vars);
+                }
                 break;
+            case "background":
+                changeBackground(command);
             default:
         }
     }
@@ -266,6 +273,7 @@ public class Interpreter {
             Procedure tempProc = runningProcedures.get(runningProcedures.size() - 1);
             programCounter = tempProc.getCallPoint();
             runningProcedures.remove(tempProc);
+            System.out.println("Running procedures: " + runningProcedures.size());
             return;
         }
         //Jump to end of procedure.
@@ -310,6 +318,7 @@ public class Interpreter {
         if (command.length > 2) {
             for (int i = 2; i < command.length; i++) {
                 tempProc.getLocalVars().put(command[i], 0);
+
             }
         }
     }
@@ -328,19 +337,31 @@ public class Interpreter {
 
             for (int i = 1; i < tempCommands.length; i++) {
                 String tempVar = "tempvar" + i;
-                //if (tempProc.getProcedureCommand().length == tempCommands.length - 1) {
-                if (true) {
-                    tempVar = tempProc.getProcedureCommand()[i + 1];
-                    System.out.println("***Trying to find key:" + tempVar);
+
+                tempVar = tempProc.getProcedureCommand()[i + 1];
+                String tempString = "";
+                double tempValue = 0;
+                //Skriv en IF statement der parser parameter på nyeste object.
+
+                if (runningProcedures.size() > 0) {
+                    tempProc = new Procedure(tempProc.getProcName(), tempProc.getProcStart(), tempProc.getProcEnd(), tempProc.getProcedureCommand());
+                    tempString = substituteVarsTest(tempVar, runningProcedures.get(runningProcedures.size() - 1).getLocalVars());
+
+                    if (isNumeric(tempString)) {
+                        tempValue = Double.parseDouble(tempString);
+
+                    }
                 }
-                if (isNumeric(tempCommands[i])) {
-                    tempProc.getLocalVars().put(tempVar, Double.parseDouble(tempCommands[i]));
-                }
+                System.out.println("***Trying to find key:" + tempVar);
+                System.out.println("Value:" + tempValue);
+                tempProc.getLocalVars().put(tempVar, tempValue);
+
             }
         }
         tempProc.setCallPoint(programCounter);
         programCounter = tempProc.getProcStart();
         runningProcedures.add(tempProc);
+        System.out.println("Running procedures: " + runningProcedures.size());
     }
 
     private void changeColor(String[] s) {
@@ -506,7 +527,7 @@ public class Interpreter {
 
     }
 
-    private void doIf(String[] command) {
+    private void doIf(String[] command, HashMap vars) {
         int ifStatements = 0;
 
         String[] temp = command[1].split("==|\\<=|\\>=|\\<|\\>");               //Split by characters that might confuse
@@ -542,6 +563,86 @@ public class Interpreter {
     private void setStrokeWidth(String[] command) {
         if (command.length > 1 && isNumeric(command[1])) {
             mainPanel.setStrokeWidth(Float.parseFloat(command[1]));
+        }
+    }
+
+    private void changeBackground(String[] s) {
+        ArrayList<Integer> c = new ArrayList<>();
+        String[] tempString = s[1].split(" ");
+
+        for (int i = 0; i < tempString.length; i++) {
+            if (!isNumeric(tempString[i])) {
+                tempString[i] = substituteVarsTest(tempString[i], this.vars);
+            }
+            int tempInt = (int) Double.parseDouble(tempString[i]);
+            if (tempInt < 0) {
+                tempInt = tempInt * -1;
+            }
+            if (tempInt > 255) {
+                tempInt = tempInt % 255;
+
+            }
+
+            c.add(tempInt);
+        }
+
+        if (c.size() >= 3) {
+            Color color = new Color(c.get(0), c.get(1), c.get(2));
+            mainPanel.jPanel1.setBackground(color);
+            System.out.println(color);
+            System.out.println("***");
+
+        } else if (c.size() < 3) {
+            int temp = 0;
+            if (c.size() < 3) {
+                temp = c.get(0);
+                if (temp < 0) {
+                    temp = temp * -1;
+                }
+                if (temp > 13) {
+                    temp = temp % 13;
+                }
+                System.out.println("Color: " + temp);
+            }
+            if (temp == 0) {
+                mainPanel.jPanel1.setBackground(Color.BLACK);
+            }
+            if (temp == 1) {
+                mainPanel.jPanel1.setBackground(Color.BLUE);
+            }
+            if (temp == 2) {
+                mainPanel.jPanel1.setBackground(Color.CYAN);
+            }
+            if (temp == 3) {
+                mainPanel.jPanel1.setBackground(Color.DARK_GRAY);
+            }
+            if (temp == 4) {
+                mainPanel.jPanel1.setBackground(Color.GRAY);
+            }
+            if (temp == 5) {
+                mainPanel.jPanel1.setBackground(Color.GREEN);
+            }
+            if (temp == 6) {
+                mainPanel.jPanel1.setBackground(Color.LIGHT_GRAY);
+            }
+            if (temp == 7) {
+                mainPanel.jPanel1.setBackground(Color.MAGENTA);
+            }
+            if (temp == 8) {
+                mainPanel.jPanel1.setBackground(Color.ORANGE);
+            }
+            if (temp == 9) {
+                mainPanel.jPanel1.setBackground(Color.PINK);
+            }
+            if (temp == 10) {
+                mainPanel.jPanel1.setBackground(Color.RED);
+            }
+            if (temp == 11) {
+                mainPanel.jPanel1.setBackground(Color.WHITE);
+            }
+            if (temp == 12) {
+                mainPanel.jPanel1.setBackground(Color.YELLOW);
+            }
         }
     }
 }
