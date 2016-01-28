@@ -77,7 +77,7 @@ public class Interpreter {
     private void substituteVars(String[] command, HashMap vars) {             //Substitute declared variables with values at time of execution
         System.out.println("Subvars running on command " + command[0]);
         if (!command[0].equals("let") && !command[0].equals("repeat") && !command[0].equals("if")
-                && !command[0].equals("color") && !command[0].equals("call") && !command[0].equals("declare") && !command[0].equals("background")) {
+                && !command[0].equals("color") && !command[0].equals("call") && !command[0].equals("declare") && !command[0].equals("background") && !command[0].equals("moveto")) {
             String expString = "";
             String[] temp = command[1].split(",");
             for (int i = 0; i < temp.length; i++) {
@@ -285,11 +285,10 @@ public class Interpreter {
 
     private void moveTo(String[] command) {
         if (command.length > 1) {
-            System.out.println("Cmd 1 " + command[1]);
+            System.out.println("*****Cmd 1 " + command[1]);
             String[] coordinates = command[1].split(",");
             for (int i = 0; i < coordinates.length; i++) {
                 coordinates[i] = substituteVarsTest(coordinates[i], this.vars);
-
             }
             if (coordinates.length > 1 && isNumeric(coordinates[0]) && isNumeric(coordinates[1])) {
                 System.out.println("X: " + coordinates[0] + " Y: " + coordinates[1]);
@@ -324,53 +323,61 @@ public class Interpreter {
     }
 
     private void callProcedure(String[] command) {
-        System.out.println("Trying to call:" + command[1]);
         if (command.length <= 1) {
-            //System.out.println("Return, size is: " + command.length);
             return;
         }
-        String tempCommands[] = command[1].split(" ");
-        System.out.println("ProcedureKey: " + tempCommands[0]);
-        Procedure tempProc = (Procedure) procedures.get(tempCommands[0]);
 
-        if (tempCommands.length > 1 && procedures.containsKey(tempCommands[0])) {
+        String[] commandStrings = command[1].split(" ");
+        Procedure tempProc = (Procedure) procedures.get(commandStrings[0]);
+        String[] tempString = tempProc.getProcedureCommand();
+        double tempDouble = 0;
+        String tempVar = "";
 
-            for (int i = 1; i < tempCommands.length; i++) {
-                String tempVar = "tempvar" + i;
-
-                tempVar = tempProc.getProcedureCommand()[i + 1];
-                String tempString = "";
-                double tempValue = 0;
-                //Skriv en IF statement der parser parameter på nyeste object.
-
+        Procedure newProc = new Procedure(tempProc.getProcName(), tempProc.getProcStart(), tempProc.getProcEnd(), tempProc.getProcedureCommand());
+        if (commandStrings.length > 1 && procedures.containsKey(commandStrings[0])) {
+            for (int i = 1; i < commandStrings.length; i++) {
                 if (runningProcedures.size() > 0) {
-                    tempProc = new Procedure(tempProc.getProcName(), tempProc.getProcStart(), tempProc.getProcEnd(), tempProc.getProcedureCommand());
-                    tempString = substituteVarsTest(tempVar, runningProcedures.get(runningProcedures.size() - 1).getLocalVars());
-
-                    if (isNumeric(tempString)) {
-                        tempValue = Double.parseDouble(tempString);
-
-                    }
+                    tempVar = tempString[i + 1];
+                    tempDouble = Double.parseDouble(substituteVarsTest(commandStrings[i], runningProcedures.get(runningProcedures.size() - 1).getLocalVars()));
+                    System.out.println("*********" + tempDouble);
+                    System.out.println("*********" + tempVar);
+                } else {
+                    tempVar = tempString[i + 1];
+                    tempDouble = Double.parseDouble(commandStrings[i]);
                 }
-                System.out.println("***Trying to find key:" + tempVar);
-                System.out.println("Value:" + tempValue);
-                tempProc.getLocalVars().put(tempVar, tempValue);
+                newProc.getLocalVars().put(tempVar, tempDouble);
 
             }
+
         }
-        tempProc.setCallPoint(programCounter);
-        programCounter = tempProc.getProcStart();
-        runningProcedures.add(tempProc);
-        System.out.println("Running procedures: " + runningProcedures.size());
+        newProc.setCallPoint(programCounter);
+        programCounter = newProc.getProcStart();
+
+        runningProcedures.add(newProc);
+
+        for (String command1 : commandStrings) {
+            System.out.println("*" + command1 + "*");
+        }
+        for (String tempString1 : tempString) {
+            System.out.println("=" + tempString1 + "=");
+        }
+
     }
 
     private void changeColor(String[] s) {
         ArrayList<Integer> c = new ArrayList<>();
         String[] tempString = s[1].split(" ");
+        HashMap tempHash;
+        if (runningProcedures.size() > 0) {
+            tempHash = runningProcedures.get(runningProcedures.size() - 1).getLocalVars();
+
+        } else {
+            tempHash = this.vars;
+        }
 
         for (int i = 0; i < tempString.length; i++) {
             if (!isNumeric(tempString[i])) {
-                tempString[i] = substituteVarsTest(tempString[i], this.vars);
+                tempString[i] = substituteVarsTest(tempString[i], tempHash);
             }
             int tempInt = (int) Double.parseDouble(tempString[i]);
             if (tempInt < 0) {
@@ -569,10 +576,17 @@ public class Interpreter {
     private void changeBackground(String[] s) {
         ArrayList<Integer> c = new ArrayList<>();
         String[] tempString = s[1].split(" ");
+        HashMap tempHash;
+        if (runningProcedures.size() > 0) {
+            tempHash = runningProcedures.get(runningProcedures.size() - 1).getLocalVars();
+
+        } else {
+            tempHash = this.vars;
+        }
 
         for (int i = 0; i < tempString.length; i++) {
             if (!isNumeric(tempString[i])) {
-                tempString[i] = substituteVarsTest(tempString[i], this.vars);
+                tempString[i] = substituteVarsTest(tempString[i], tempHash);
             }
             int tempInt = (int) Double.parseDouble(tempString[i]);
             if (tempInt < 0) {

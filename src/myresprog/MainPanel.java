@@ -63,7 +63,7 @@ public class MainPanel extends javax.swing.JFrame {
 //                }
         };
 
-        timer = new Timer(1, actListner);
+        timer = new Timer(0, actListner);
         timer.start();
 
     }
