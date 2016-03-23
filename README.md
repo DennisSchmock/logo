@@ -1,5 +1,5 @@
-# logo
-This project is inspired heavily by the Logo. The intention is, to create a real programming language that children of most ages
+# Myresprog (ant language)
+This project is inspired heavily by the old programming language: Logo. The intention is, to create a real programming language that children of most ages
 will be able to use.
 
 At the moment it is in its earliest stage. There are some limited commands, you can declare functions, loops are supported and you can make
