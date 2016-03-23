@@ -1,0 +1,38 @@
+moveto 30,600
+repeat 12
+rt 90
+mf 50
+lt 90
+call flower
+repeat end
+call ground 600 40
+
+declare flower
+color 3
+fd 100
+repeat 60
+color 8
+rt 6
+fd 20
+bk 20
+repeat end
+repeat 60
+color 3
+rt 6
+fd 5
+mb 5
+repeat end
+mb 100
+declare end
+
+
+declare ground x d
+rt 90
+color 0
+repeat d
+moveto 20,x
+fd 700
+let x x+1
+repeat end
+declare end
+

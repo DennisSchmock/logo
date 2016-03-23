@@ -1,0 +1,15 @@
+let red 0
+let blue 0
+let green 0
+let a 1
+
+repeat 1000
+
+color red green blue
+fd a
+rt 90
+let a a + 0.5
+let red red +1 
+let green red + 1
+repeat end
+

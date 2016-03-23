@@ -1,0 +1,11 @@
+declare square l d
+if d>0
+repeat 4
+fd l
+rt 90
+call square l*0.4 d-1
+repeat end
+if end
+declare end
+
+call square 200 6

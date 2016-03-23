@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Form version="1.3" maxVersion="1.9" type="org.netbeans.modules.form.forminfo.JFrameFormInfo">
+  <Properties>
+    <Property name="defaultCloseOperation" type="int" value="3"/>
+    <Property name="alwaysOnTop" type="boolean" value="true"/>
+  </Properties>
+  <SyntheticProperties>
+    <SyntheticProperty name="formSizePolicy" type="int" value="1"/>
+    <SyntheticProperty name="generateCenter" type="boolean" value="true"/>
+  </SyntheticProperties>
+  <Events>
+    <EventHandler event="windowClosed" listener="java.awt.event.WindowListener" parameters="java.awt.event.WindowEvent" handler="formWindowClosed"/>
+  </Events>
+  <AuxValues>
+    <AuxValue name="FormSettings_autoResourcing" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_autoSetComponentName" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_generateFQN" type="java.lang.Boolean" value="true"/>
+    <AuxValue name="FormSettings_generateMnemonicsCode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_i18nAutoMode" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_layoutCodeTarget" type="java.lang.Integer" value="1"/>
+    <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
+    <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
+    <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+  </AuxValues>
+
+  <Layout>
+    <DimensionLayout dim="0">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="1" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="1025" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace pref="354" max="32767" attributes="0"/>
+                  <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="360" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+    <DimensionLayout dim="1">
+      <Group type="103" groupAlignment="0" attributes="0">
+          <Group type="102" alignment="0" attributes="0">
+              <EmptySpace max="-2" attributes="0"/>
+              <Component id="jScrollPane1" pref="741" max="32767" attributes="0"/>
+              <EmptySpace max="-2" attributes="0"/>
+          </Group>
+          <Group type="103" rootIndex="1" groupAlignment="0" attributes="0">
+              <Group type="102" alignment="1" attributes="0">
+                  <EmptySpace pref="262" max="32767" attributes="0"/>
+                  <Component id="jPanel1" min="-2" max="-2" attributes="0"/>
+                  <EmptySpace pref="268" max="32767" attributes="0"/>
+              </Group>
+          </Group>
+      </Group>
+    </DimensionLayout>
+  </Layout>
+  <SubComponents>
+    <Container class="javax.swing.JPanel" name="jPanel1">
+
+      <Layout>
+        <DimensionLayout dim="0">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="0" pref="323" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+        <DimensionLayout dim="1">
+          <Group type="103" groupAlignment="0" attributes="0">
+              <EmptySpace min="0" pref="223" max="32767" attributes="0"/>
+          </Group>
+        </DimensionLayout>
+      </Layout>
+    </Container>
+    <Container class="javax.swing.JScrollPane" name="jScrollPane1">
+      <AuxValues>
+        <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
+      </AuxValues>
+
+      <Layout class="org.netbeans.modules.form.compat2.layouts.support.JScrollPaneSupportLayout"/>
+      <SubComponents>
+        <Component class="javax.swing.JEditorPane" name="jEditorPane1">
+          <Properties>
+            <Property name="editable" type="boolean" value="false"/>
+            <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+              <Font name="Lucida Grande" size="14" style="0"/>
+            </Property>
+            <Property name="text" type="java.lang.String" value="*****BASIC COMMANDS*****&#xa;&#xa;FD XX- Forward Draw, the ant forward the number of pixels you define, drawing a line. Accepts Decimals&#xa;Syntax: FD 10 OR BK 10.5&#xa;&#xa;BK XX- Backwards Draw, moves the ant backward the number of pixels you define, drawing a line. Accepts Decimals&#xa;Syntax: BK 10 or BK 10.5&#xa;&#xa;RT XX- Right Turn. Turns the ant right the degree you specify. Accepts Decimals&#xa;Syntax: RT 90 OR 0.5&#xa;&#xa;LT XX - Left Turn. Turns the ant left the degree you specify.&#xa;Syntax: LT 90&#xa;&#xa;MF XX - Move Forward without drawing a line, the number of pixels you define. &#xa;Syntax: MF 90&#xa;&#xa;MB XX - Move Backwards without drawing a line, the number of pixels you define.&#xa;Syntax: MB 90&#xa;&#xa;MoveTo X,Y - moves the ant to your specified coordinate. &#xa;Syntax: MoveTo 200,300&#xa;&#xa;TurnTo XX - turns the Ant the direction you choose, 0 and 360 being straight North. &#xa;Syntax: TurnTo 90&#xa;&#xa;Color X - Change the color to a predefined color between 0 and 12.&#xa;Syntax: Color 5  &#xa;0 - Black&#xa;1 - Blue&#xa;2 - Cyan&#xa;3 - Dark Gray&#xa;4 - Gray&#xa;5 - Green&#xa;6 - Light Gray&#xa;7 - Maganta&#xa;8 - Orange&#xa;9 - Pink&#xa;10 - Red&#xa;11- White&#xa;12 - Yellow&#xa;&#xa;Color R,G,B - Blend your own color fra Red, Green and Blue. Use values between 0 and 255 to control how much of a color you use. 255,255,255 Will give you WHITE, and 0,0,0 will give you BLACK&#xa;Syntax: Color 100,100,100&#xa;&#xa;Background XX OR Background R,G,B - same as Color, but change the color of the background instead. Will delete whatever you drew on the canvas. &#xa;&#xa;*****ADVANCED COMMANDS*****&#xa;&#xa;***Variables***&#xa;Let abe 100 - This will make a variable of the name Abe which holds the value 100. &#xa;The Variable can be use together with commands.&#xa;&#xa;LET distance 100 &lt;- distance is now equal 100&#xa;FD distance &lt;- the ant will draw a line of 100&#xa;&#xa;**Change the Variable**&#xa;To change the variable, use LET again.&#xa;Example: &#xa;&#xa;Let abe 100 &lt;- Value of abe is now 100&#xa;FD abe &lt;- Draw a line of 100&#xa;LET abe 50 &lt;- Value of abe is now 50&#xa;&#xa;***Expressions***&#xa;You can use expressions wherever you use a parameter. &#xa;Example: &#xa;LET abe 100&#xa;FD abe*2 (abe is 100, so you will draw a line of 100*2)&#xa;&#xa;the following operators are supported:&#xa;&#x9;&#x2022;&#x9;Addition: &apos;2 + 2&apos;&#xa;&#x9;&#x2022;&#x9;Subtraction: &apos;2 - 2&apos;&#xa;&#x9;&#x2022;&#x9;Multiplication: &apos;2 * 2&apos;&#xa;&#x9;&#x2022;&#x9;Division: &apos;2 / 2&apos;&#xa;&#x9;&#x2022;&#x9;Exponential: &apos;2 ^ 2&apos;&#xa;&#x9;&#x2022;&#x9;Unary Minus,Plus (Sign Operators): &apos;+2 - (-2)&apos;&#xa;&#x9;&#x2022;&#x9;Modulo: &apos;2 % 2&apos;&#xa;the following functions are supported:&#xa;&#x9;&#x2022;&#x9;abs: absolute value&#xa;&#x9;&#x2022;&#x9;acos: arc cosine&#xa;&#x9;&#x2022;&#x9;asin: arc sine&#xa;&#x9;&#x2022;&#x9;atan: arc tangent&#xa;&#x9;&#x2022;&#x9;cbrt: cubic root&#xa;&#x9;&#x2022;&#x9;ceil: nearest upper integer&#xa;&#x9;&#x2022;&#x9;cos: cosine&#xa;&#x9;&#x2022;&#x9;cosh: hyperbolic cosine&#xa;&#x9;&#x2022;&#x9;exp: euler&apos;s number raised to the power (e^x)&#xa;&#x9;&#x2022;&#x9;floor: nearest lower integer&#xa;&#x9;&#x2022;&#x9;log: logarithmus naturalis (base e)&#xa;&#x9;&#x2022;&#x9;log2: logarithm to base 2&#xa;&#x9;&#x2022;&#x9;log10: logarithm to base 10&#xa;&#x9;&#x2022;&#x9;sin: sine&#xa;&#x9;&#x2022;&#x9;sinh: hyperbolic sine&#xa;&#x9;&#x2022;&#x9;sqrt: square root&#xa;&#x9;&#x2022;&#x9;tan: tangent&#xa;&#x9;&#x2022;&#x9;tanh: hyperbolic tangent&#xa;&#xa;*****CONTROL STRUCTURES*****&#xa;&#xa;REPEAT xx - repeats the commands inside the scope for XX times.&#xa;Syntax:&#xa;&#xa;REPEAT 4&#x9;&lt;-Repeat four times&#xa;FD 100&#x9;&lt;-Go forward 100&#xa;RT 90&#x9;&#x9;&lt;-Turn right 90&#xa;REPEAT END&#x9;&lt;-Go to repeat start if there are still iterations left&#xa;You can make a nested loop this way:&#xa;REPEAT 4 &lt;-Outer loop. Executes 4 times&#xa;FD 100&#xa;REPEAT 4 &lt;-Inner loop. Executes 4 times each time it is hit. In this case, 16 times in total.&#xa;FD 10&#xa;RT 90&#xa;REPEAT END &lt;-end of inner loop&#xa;REPEAT END &lt;-end of outer loop&#xa;&#xa;There is not theoretical limit on how many loops can be nested inside each other.&#xa;&#xa;IF Expression - Will execute commands inside the IF &lt;-&gt; IF END scope only if the expression returns true. &#xa;Example&#xa;IF 1&lt;4 &#x9;&#x9;&lt;-Returns true, since 1 IS smaller than 4. &#xa;FD 100&#x9;&lt;-Forward 100&#xa;IF END&#x9;&lt;-End of if statement. &#xa;&#xa;IF 1&gt;4 &#x9;&#x9;&lt;-Returns FALSE, since 1 IS not bigger than 4. &#xa;FD 100&#x9;&lt;-Skips this&#xa;IF END&#x9;&lt;-End of if statement. &#xa;&#xa;*****PROCEDURES*****&#xa;&#xa;Procedures are small functions that executes code defined inside it, when called. &#xa;&#xa;Declaring a simple procedure:&#xa;&#xa;DECLARE square&#xa;REPEAT 4&#xa;FD 100&#xa;RT 90&#xa;REPEAT END&#xa;DECLARE END&#xa;&#xa;To call the procedure you put in the following command in your code:&#xa;CALL Square&#xa;&#xa;This will execute the code inside the declaration of the square.&#xa;&#xa;Declare an advanced procedure&#xa;&#xa;Procedures can use parameters&#xa;&#xa;Example with Square:&#xa;&#xa;DECLARE square size&#xa;REPEAT 4&#xa;FD size&#xa;RT 90&#xa;DECLARE END&#xa;&#xa;When you declare a procedure with a parameter you MUST use the parameter when you call it, or your code will fail. &#xa;Example:&#xa;CALL square 100&#xa;&#xa;This will paint a square with sides of 100.&#xa;A procedure can hold more than one parameter:&#xa;&#xa;DECLARE polygon size angles&#xa;REPEAT angles&#xa;FD size&#xa;rt 360/angles&#xa;REPEAT END&#xa;DECLARE END&#xa;&#xa;If using more than one parameter you MUST use all parameters when calling it:&#xa;Example:&#xa;CALL polygon 100 8&#xa;&#xa;This will paint a octagon with sides of a 100.&#xa;&#xa;***Recursive calls***&#xa;A method can call itself (recursively). &#xa;&#xa;Example:&#xa;DECLARE square l d &lt;-procedure declaration&#xa;IF d&gt;0 &lt;Procedure baseline.&#xa;REPEAT 4&#xa;FD l&#xa;RT 90&#xa;CALL square l*0.4 d-1 &lt;-Recursive call&#xa;REPEAT end&#xa;IF end&#xa;DECLARE end&#xa;&#xa;CALL square 200 6&#xa;&#xa;This will produce a small fractal with Squares inside squares. &#xa;"/>
+          </Properties>
+        </Component>
+      </SubComponents>
+    </Container>
+  </SubComponents>
+</Form>

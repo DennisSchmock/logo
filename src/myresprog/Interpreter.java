@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.stream.Stream;
+import javax.swing.JOptionPane;
 import net.objecthunter.exp4j.Expression;
 import net.objecthunter.exp4j.ExpressionBuilder;
 
@@ -35,17 +36,15 @@ public class Interpreter {
 
     public Interpreter(MainPanel panel) {
         mainPanel = panel;
-        lr = new LineReader("Commands.txt");
-        commands = lr.textFileToStringArrayList();
         angle = 0;
         oldPoint = new Point(400, 300);
         currentPoint = oldPoint;
         loops = new ArrayList<>();
-        scanForProcedures();
 
     }
 
     public void performNextAction() {
+
         command = this.getCommands().get(getProgramCounter());
         makeCommandToExecute();
         if (runningProcedures.size() > 0) {
@@ -85,9 +84,18 @@ public class Interpreter {
                     expString = temp[k];
                 }
                 System.out.println("Expr string: " + expString);
-                Expression e = new ExpressionBuilder(expString).variables(vars.keySet()).build();
-                e.setVariables(vars);
-                commandToExecute[1] = commandToExecute[1].replace(temp[i], String.valueOf(e.evaluate()));
+                try {
+                    Expression e = new ExpressionBuilder(expString).variables(vars.keySet()).build();
+                    e.setVariables(vars);
+                    commandToExecute[1] = commandToExecute[1].replace(temp[i], String.valueOf(e.evaluate()));
+                } catch (IllegalArgumentException e) {
+                    String commandLine = "";
+                    for (String command1 : command) {
+                        commandLine += command1 + " ";
+                    }
+                    displayErrorMessage(e, "Something went wrong.\nLine number: " + this.programCounter + 1 + "\nCommand: " + commandLine);
+                }
+
             }
         }
     }
@@ -97,72 +105,78 @@ public class Interpreter {
         //String expString = var;
 
         System.out.println("Expr string: " + var);
-        Expression e = new ExpressionBuilder(var).variables(vars.keySet()).build();
-        e.setVariables(vars);
-        return String.valueOf(e.evaluate());
+        try {
+            Expression e = new ExpressionBuilder(var).variables(vars.keySet()).build();
+            e.setVariables(vars);
+            return String.valueOf(e.evaluate());
+        } catch (IllegalArgumentException e) {
+
+            displayErrorMessage(e, "Something went wrong.\nLine number: " + this.programCounter + 1 + "\nCommand: " + var);
+            return "";
+
+        }
 
     }
 
     private void interpretCommand(String[] command) {
         String tempString = command[0].toLowerCase();
-        switch (tempString) {
-            case "fd":
-                forwardDrive(command);
-                break;
-            case "bk":
-                backWardsDrive(command);
-                break;
-            case "rt":
-                angle = angle + Double.parseDouble(command[1]);
-                break;
-            case "lt":
-                angle = angle - Double.parseDouble(command[1]);
-                break;
-            case "let":
-                if (runningProcedures.size() > 0) {
-                    let(runningProcedures.get(runningProcedures.size() - 1).getLocalVars());
-                } else {
-                    let(this.vars);
-                }
-                break;
-            case "repeat":
-                repeatCommands(command);
-                break;
-            case "strokewidth":
-                setStrokeWidth(command);
-                break;
-            case "color":
-                changeColor(command);
-                break;
-            case "mf":
-                movePointerForward(command);
-                break;
-            case "mb":
-                movePointerBack(command);
-                break;
-            case "declare":
-                handleProcedure(command);
-                break;
-            case "call":
-                callProcedure(command);
-                break;
-            case "moveto":
-                moveTo(command);
-                break;
-            case "turnto":
-                turnTo(command);
-                break;
-            case "if":
-                if (runningProcedures.size() > 0) {
-                    doIf(command, runningProcedures.get(runningProcedures.size() - 1).getLocalVars());
-                } else {
-                    doIf(command, this.vars);
-                }
-                break;
-            case "background":
-                changeBackground(command);
-            default:
+        if (tempString.equalsIgnoreCase("fd")) {
+            forwardDrive(command);
         }
+        if (tempString.equalsIgnoreCase("bk")) {
+            backWardsDrive(command);
+        }
+        if (tempString.equalsIgnoreCase("rt")) {
+            turnLeft(command);
+        }
+        if (tempString.equalsIgnoreCase("lt")) {
+            turnRight(command);
+        }
+        if (tempString.equalsIgnoreCase("let")) {
+            let();
+        }
+        if (tempString.equalsIgnoreCase("repeat")) {
+            repeatCommands(command);
+        }
+        if (tempString.equalsIgnoreCase("strokewidth")) {
+            setStrokeWidth(command);
+        }
+        if (tempString.equalsIgnoreCase("color")) {
+            changeColor(command);
+        }
+        if (tempString.equalsIgnoreCase("mf")) {
+            movePointerForward(command);
+        }
+        if (tempString.equalsIgnoreCase("mb")) {
+            movePointerBack(command);
+        }
+        if (tempString.equalsIgnoreCase("declare")) {
+            handleProcedure(command);
+        }
+        if (tempString.equalsIgnoreCase("call")) {
+            callProcedure(command);
+        }
+        if (tempString.equalsIgnoreCase("moveTo")) {
+            moveTo(command);
+        }
+        if (tempString.equalsIgnoreCase("turnTo")) {
+            turnTo(command);
+        }
+        if (tempString.equalsIgnoreCase("if")) {
+            doIf(command);
+        }
+        if (tempString.equalsIgnoreCase("background")) {
+            changeBackground(command);
+        }
+
+    }
+
+    public void turnLeft(String[] command1) throws NumberFormatException {
+        angle = angle + Double.parseDouble(command1[1]);
+    }
+
+    public void turnRight(String[] command1) throws NumberFormatException {
+        angle = angle - Double.parseDouble(command1[1]);
     }
 
     public void backWardsDrive(String[] command1) throws NumberFormatException {
@@ -181,15 +195,22 @@ public class Interpreter {
         oldPoint = currentPoint;
     }
 
-    public void let(HashMap vars) {
+    public void let() {
+        HashMap tempVars;
+        if (runningProcedures.size() > 0) {
+            tempVars = runningProcedures.get(runningProcedures.size() - 1).getLocalVars();
+        } else {
+            tempVars = this.vars;
+        }
         String expString = "";
         for (int i = 2; i < this.command.length; i++) {                 // Add everything after "let <var>"
             expString += this.command[i];                               // to expString
         }
-        Expression e = new ExpressionBuilder(expString).variables(vars.keySet()).build();
-        e.setVariables(vars);
+
+        Expression e = new ExpressionBuilder(expString).variables(tempVars.keySet()).build();
+        e.setVariables(tempVars);
         commandToExecute[1] = commandToExecute[1].split(" ")[0];          // Find name of variable
-        vars.put(commandToExecute[1], e.evaluate());                    // Map name to value in map
+        tempVars.put(commandToExecute[1], e.evaluate());                    // Map name to value in map
 
         System.out.println("Expression added: " + commandToExecute[1] + " with the value " + e.evaluate());
     }
@@ -284,11 +305,17 @@ public class Interpreter {
     }
 
     private void moveTo(String[] command) {
+        HashMap tempVars;
+        if (runningProcedures.size() > 0) {
+            tempVars = runningProcedures.get(runningProcedures.size() - 1).getLocalVars();
+        } else {
+            tempVars = this.vars;
+        }
         if (command.length > 1) {
             System.out.println("*****Cmd 1 " + command[1]);
             String[] coordinates = command[1].split(",");
             for (int i = 0; i < coordinates.length; i++) {
-                coordinates[i] = substituteVarsTest(coordinates[i], this.vars);
+                coordinates[i] = substituteVarsTest(coordinates[i], tempVars);
             }
             if (coordinates.length > 1 && isNumeric(coordinates[0]) && isNumeric(coordinates[1])) {
                 System.out.println("X: " + coordinates[0] + " Y: " + coordinates[1]);
@@ -329,7 +356,12 @@ public class Interpreter {
 
         String[] commandStrings = command[1].split(" ");
         Procedure tempProc = (Procedure) procedures.get(commandStrings[0]);
+        if (tempProc == null) {
+            this.displayErrorMessage("I am pretty sure, there is no Procedure of Name: " + commandStrings[0]);
+            return;
+        }
         String[] tempString = tempProc.getProcedureCommand();
+
         double tempDouble = 0;
         String tempVar = "";
 
@@ -531,18 +563,25 @@ public class Interpreter {
         oldPoint = new Point(400, 300);
         currentPoint = oldPoint;
         loops = new ArrayList<>();
+        mainPanel.setColor(Color.BLACK);
 
     }
 
-    private void doIf(String[] command, HashMap vars) {
+    private void doIf(String[] command) {
         int ifStatements = 0;
+        HashMap tempVars;
+        if (runningProcedures.size() > 0) {
+            tempVars = runningProcedures.get(runningProcedures.size() - 1).getLocalVars();
+        } else {
+            tempVars = this.vars;
+        }
 
         String[] temp = command[1].split("==|\\<=|\\>=|\\<|\\>");               //Split by characters that might confuse
         for (int i = 0; i < temp.length; i++) {                                 //the evaluation
             System.out.println("Temp[" + i + "] " + temp[i]);
-            if (vars.containsKey(temp[i])) {
+            if (tempVars.containsKey(temp[i])) {
 
-                command[1] = command[1].replace(temp[i], String.valueOf(vars.get(temp[i])));
+                command[1] = command[1].replace(temp[i], String.valueOf(tempVars.get(temp[i])));
                 System.out.println(command[1] + temp[i]);
             }
         }
@@ -659,4 +698,13 @@ public class Interpreter {
             }
         }
     }
+
+    private void displayErrorMessage(IllegalArgumentException e, String s) {
+        JOptionPane.showMessageDialog(mainPanel, s);
+    }
+
+    private void displayErrorMessage(String s) {
+        JOptionPane.showMessageDialog(mainPanel, s);
+    }
+
 }

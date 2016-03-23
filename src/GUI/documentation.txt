@@ -1,0 +1,194 @@
+<b>Basic commands</b>
+
+FD XX- Forward Draw, the ant forward the number of pixels you define, drawing a line. Accepts Decimals
+Syntax: FD 10 OR BK 10.5
+
+BK XX- Backwards Draw, moves the ant backward the number of pixels you define, drawing a line. Accepts Decimals
+Syntax: BK 10 or BK 10.5
+
+RT XX- Right Turn. Turns the ant right the degree you specify. Accepts Decimals
+Syntax: RT 90 OR 0.5
+
+LT XX - Left Turn. Turns the ant left the degree you specify.
+Syntax: LT 90
+
+MF XX - Move Forward without drawing a line, the number of pixels you define. 
+Syntax: MF 90
+
+MB XX - Move Backwards without drawing a line, the number of pixels you define.
+Syntax: MB 90
+
+MoveTo X,Y - moves the ant to your specified coordinate. 
+Syntax: MoveTo 200,300
+
+TurnTo XX - turns the Ant the direction you choose, 0 and 360 being straight North. 
+Syntax: TurnTo 90
+
+Color X - Change the color to a predefined color between 0 and 12.
+Syntax: Color 5  
+0 - Black
+1 - Blue
+2 - Cyan
+3 - Dark Gray
+4 - Gray
+5 - Green
+6 - Light Gray
+7 - Maganta
+8 - Orange
+9 - Pink
+10 - Red
+11- White
+12 - Yellow
+
+Color R,G,B - Blend your own color fra Red, Green and Blue. Use values between 0 and 255 to control how much of a color you use. 255,255,255 Will give you WHITE, and 0,0,0 will give you BLACK
+Syntax: Color 100,100,100
+
+Background XX OR Background R,G,B - same as Color, but change the color of the background instead. Will delete whatever you drew on the canvas. 
+
+Advanced
+
+Variables
+Let abe 100 - This will make a variable of the name Abe which holds the value 100. 
+The Variable can be use together with commands.
+
+LET distance 100 <- distance is now equal 100
+FD distance <- the ant will draw a line of 100
+
+Change the Variable
+To change the variable, use LET again.
+Example: 
+
+Let abe 100 <- Value of abe is now 100
+FD abe <- Draw a line of 100
+LET abe 50 <- Value of abe is now 50
+
+Expressions
+You can use expressions wherever you use a parameter. 
+Example: 
+LET abe 100
+FD abe*2 (abe is 100, so you will draw a line of 100*2)
+
+the following operators are supported:
+	•	Addition: '2 + 2'
+	•	Subtraction: '2 - 2'
+	•	Multiplication: '2 * 2'
+	•	Division: '2 / 2'
+	•	Exponential: '2 ^ 2'
+	•	Unary Minus,Plus (Sign Operators): '+2 - (-2)'
+	•	Modulo: '2 % 2'
+the following functions are supported:
+	•	abs: absolute value
+	•	acos: arc cosine
+	•	asin: arc sine
+	•	atan: arc tangent
+	•	cbrt: cubic root
+	•	ceil: nearest upper integer
+	•	cos: cosine
+	•	cosh: hyperbolic cosine
+	•	exp: euler's number raised to the power (e^x)
+	•	floor: nearest lower integer
+	•	log: logarithmus naturalis (base e)
+	•	log2: logarithm to base 2
+	•	log10: logarithm to base 10
+	•	sin: sine
+	•	sinh: hyperbolic sine
+	•	sqrt: square root
+	•	tan: tangent
+	•	tanh: hyperbolic tangent
+
+Control structures
+
+REPEAT xx - repeats the commands inside the scope for XX times.
+Syntax:
+
+REPEAT 4	<-Repeat four times
+FD 100	<-Go forward 100
+RT 90		<-Turn right 90
+REPEAT END	<-Go to repeat start if there are still iterations left
+You can make a nested loop this way:
+REPEAT 4 <-Outer loop. Executes 4 times
+FD 100
+REPEAT 4 <-Inner loop. Executes 4 times each time it is hit. In this case, 16 times in total.
+FD 10
+RT 90
+REPEAT END <-end of inner loop
+REPEAT END <-end of outer loop
+
+There is not theoretical limit on how many 
+
+IF Expression - Will execute commands inside the IF <-> IF END scope only if the expression returns true. 
+Example
+IF 1<4 		<-Returns true, since 1 IS smaller than 4. 
+FD 100	<-Forward 100
+IF END	<-End of if statement. 
+
+IF 1>4 		<-Returns FALSE, since 1 IS not bigger than 4. 
+FD 100	<-Skips this
+IF END	<-End of if statement. 
+
+Procedures
+Procedures are small functions that executes code defined inside it, when called. 
+
+Declaring a simple procedure:
+
+DECLARE square
+REPEAT 4
+FD 100
+RT 90
+REPEAT END
+DECLARE END
+
+To call the procedure you put in the following command in your code:
+CALL Square
+
+This will execute the code inside the declaration of the square.
+
+Declare an advanced procedure
+
+Procedures can use parameters
+
+Example with Square:
+
+DECLARE square size
+REPEAT 4
+FD size
+RT 90
+DECLARE END
+
+When you declare a procedure with a parameter you MUST use the parameter when you call it, or your code will fail. 
+Example:
+CALL square 100
+
+This will paint a square with sides of 100.
+A procedure can hold more than one parameter:
+
+DECLARE polygon size angles
+REPEAT angles
+FD size
+rt 360/angles
+REPEAT END
+DECLARE END
+
+If using more than one parameter you MUST use all parameters when calling it:
+Example:
+CALL polygon 100 8
+
+This will paint a octagon with sides of a 100.
+
+Recursive calls
+A method can call itself (recursively). 
+
+Example:
+DECLARE square l d <-procedure declaration
+IF d>0 <Procedure baseline.
+REPEAT 4
+FD l
+RT 90
+CALL square l*0.4 d-1 <-Recursive call
+REPEAT end
+IF end
+DECLARE end
+
+CALL square 200 6
+
+This will produce a small fractal with Squares inside squares. 
